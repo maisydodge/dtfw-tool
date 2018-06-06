@@ -1,7 +1,18 @@
 import React from "react";
 import { render } from "react-dom";
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+//import DatePicker from 'react-date-picker'
 import "react-bootstrap-table/dist/react-bootstrap-table.min.css";
+import 'semantic-ui-css/semantic.min.css';
+
+
+// var defaultAttributes = {
+//   webConnect: true,
+//   ovrcHome: true,
+//   ovrcPro: false,
+//   logTimeSeries: false,
+//   parentalControls: false
+// }; //add if statement to booleanCheck
 
 var dt_data= [
   {
@@ -9,21 +20,17 @@ var dt_data= [
     "supported" : true,
     "category" : "Media",
     "brandName" : "Binary",
-    "type" : "MOIP",
-    "label" : "MOIP",
     "model" : "B-900-MOIP-4K-CTRL",
     "firmware" : "1.0.1.9",
-    "attributes" : {
-        "webConnect" : true,
-        "ovrcHome" : false,
-        "ovrcPro" : false,
-        "logTimeSeries" : false,
-        "parentalControls" : false,
-        "webconnect" : true
-    },
-    "ovrcPro" : false,
-    "ovrcHome" : false,
-    "logTimeSeries" : false
+    attributes : [{
+      "type" : "MOIP",
+      "label" : "MOIP",
+      "webconnect" : true,
+      "ovrcHome" : false,
+      "ovrcPro" : false,
+      "logTimeSeries" : false,
+      "parentalControls" : false,
+    }]
   },
 
   /* 2 */
@@ -32,21 +39,17 @@ var dt_data= [
     "supported" : true,
     "category" : "Media",
     "brandName" : "Binary",
-    "type" : "MOIP",
-    "label" : "MOIP",
     "model" : "B-900-MOIP-4K-CTRL",
     "firmware" : "1.0.1.5",
-    "attributes" : {
-        "webConnect" : true,
-        "ovrcHome" : false,
-        "ovrcPro" : false,
-        "logTimeSeries" : false,
-        "parentalControls" : false,
-        "webconnect" : true
-    },
-    "ovrcPro" : false,
-    "ovrcHome" : false,
-    "logTimeSeries" : false
+    attributes : [{
+      "type" : "MOIP",
+      "label" : "MOIP",
+      "webconnect" : true,
+      "ovrcHome" : false,
+      "ovrcPro" : false,
+      "logTimeSeries" : false,
+      "parentalControls" : false,
+    }]
   },
 
   /* 3 */
@@ -55,21 +58,17 @@ var dt_data= [
     "supported" : true,
     "category" : "Surveillance",
     "brandName" : "Luma",
-    "type" : "NVR",
-    "label" : "NVR",
     "model" : "LUM-310-NVR-16CH",
     "firmware" : "3.4.99.180503",
-    "attributes" : {
-        "webConnect" : false,
-        "ovrcHome" : true,
-        "ovrcPro" : false,
-        "logTimeSeries" : false,
-        "parentalControls" : false,
-        "webconnect" : false
-    },
-    "ovrcPro" : false,
-    "ovrcHome" : true,
-    "logTimeSeries" : false
+    attributes : [{
+      "type" : "NVR",
+      "label" : "NVR",
+      "ovrcHome" : true,
+      "ovrcPro" : false,
+      "logTimeSeries" : false,
+      "parentalControls" : false,
+      "webconnect" : false
+    }]
   },
 
   /* 4 */
@@ -78,26 +77,22 @@ var dt_data= [
     "supported" : true,
     "category" : "Power",
     "brandName" : "WattBox",
-    "type" : "WATTBOX",
-    "label" : "WattBox",
     "model" : "WB-900VS-IPV-18",
     "firmware" : "0.9.00",
-    "attributes" : {
-        "webConnect" : true,
-        "ovrcHome" : true,
-        "ovrcPro" : false,
-        "logTimeSeries" : false,
-        "parentalControls" : false,
-        "webconnect" : true,
-        "sshtunnel" : {
-            "supports" : true,
-            "port" : 80.0,
-            "protocol" : "HTTP"
+    attributes :[{
+      "type" : "WATTBOX",
+      "label" : "WattBox",
+      "ovrcHome" : true,
+      "ovrcPro" : false,
+      "logTimeSeries" : false,
+      "parentalControls" : false,
+      "webconnect" : true,
+      "sshtunnel" : {
+        "supports" : true,
+        "port" : 80.0,
+        "protocol" : "HTTP"
         }
-    },
-    "ovrcPro" : false,
-    "ovrcHome" : true,
-    "logTimeSeries" : false
+    }]
   },
 
   /* 5 */
@@ -106,26 +101,23 @@ var dt_data= [
     "supported" : true,
     "category" : "Power",
     "brandName" : "WattBox",
-    "type" : "WATTBOX",
-    "label" : "WattBox",
     "model" : "WB-700VS-IPV-12",
     "firmware" : "0.9.00",
-    "attributes" : {
-        "webConnect" : true,
-        "ovrcHome" : true,
-        "ovrcPro" : false,
-        "logTimeSeries" : false,
-        "parentalControls" : false,
-        "webconnect" : true,
-        "sshtunnel" : {
-            "supports" : true,
-            "port" : 80.0,
-            "protocol" : "HTTP"
+    attributes : [{
+      "type" : "WATTBOX",
+      "label" : "WattBox",
+      "webConnect" : true,
+      "ovrcHome" : true,
+      "ovrcPro" : false,
+      "logTimeSeries" : false,
+      "parentalControls" : false,
+      "webconnect" : true,
+      "sshtunnel" : {
+          "supports" : true,
+          "port" : 80.0,
+          "protocol" : "HTTP"
         }
-    },
-    "ovrcPro" : false,
-    "ovrcHome" : true,
-    "logTimeSeries" : false
+    }],
   },
 
   /* 6 */
@@ -134,26 +126,22 @@ var dt_data= [
     "supported" : true,
     "category" : "Networking",
     "brandName" : "OvrC",
-    "type" : "HUB",
-    "label" : "Hub",
     "model" : "OVRC-300-PRO",
     "firmware" : "CORE.4721",
-    "attributes" : {
-        "webConnect" : true,
-        "ovrcHome" : false,
-        "ovrcPro" : true,
-        "logTimeSeries" : true,
-        "parentalControls" : false,
-        "webconnect" : true,
-        "sshtunnel" : {
-            "supports" : true,
-            "port" : 80.0,
-            "protocol" : "HTTP"
+    attributes : [{
+      "type" : "HUB",
+      "label" : "Hub",
+      "ovrcHome" : false,
+      "ovrcPro" : true,
+      "logTimeSeries" : true,
+      "parentalControls" : false,
+      "webconnect" : true,
+      "sshtunnel" : {
+        "supports" : true,
+        "port" : 80.0,
+        "protocol" : "HTTP"
         }
-    },
-    "ovrcPro" : true,
-    "ovrcHome" : false,
-    "logTimeSeries" : true
+    }],
   },
 
   /* 7 */
@@ -162,75 +150,71 @@ var dt_data= [
     "supported" : true,
     "category" : "Surveillance",
     "brandName" : "Luma",
-    "type" : "NVR",
-    "label" : "NVR",
     "model" : "LUM-510-NVR-16CH",
     "firmware" : "3.4.95.170930",
-    "attributes" : {
-        "webConnect" : false,
-        "ovrcHome" : true,
-        "ovrcPro" : false,
-        "logTimeSeries" : false,
-        "parentalControls" : false,
-        "webconnect" : false
-    },
-    "ovrcPro" : false,
-    "ovrcHome" : true,
-    "logTimeSeries" : false
+    attributes : [{
+      "type" : "NVR",
+      "label" : "NVR",
+      "ovrcHome" : true,
+      "ovrcPro" : false,
+      "logTimeSeries" : false,
+      "parentalControls" : false,
+      "webconnect" : false
+    }],
   },
 
   /* 8 */
   {
     "_id" : "5ad7d0ae285bac42d02adeec",
-    "attributes" : {
-        "webconnect" : true,
-        "hasWireless" : false
-    },
     "brandName" : "Araknis Networks",
     "category" : "Networking",
     "firmware" : "CORE.4721",
-    "label" : "Router",
     "model" : "AN-510-RT-5L2W",
     "supported" : true,
-    "type" : "ROUTER_HUB",
-    "ovrcHome" : true,
-    "logTimeSeries" : true
+    attributes : [{
+      "type" : "ROUTER_HUB",
+      "label" : "Router",
+      "webconnect" : true,
+      "ovrcHome" : true,
+      "logTimeSeries" : true,
+      "hasWireless" : false //Add column for this?
+    }],
   },
 
   /* 9 */
   {
     "_id" : "5ad7d073285bac42d02adeeb",
-    "attributes" : {
-        "webconnect" : true,
-        "hasWireless" : false
-    },
     "brandName" : "Araknis Networks",
     "category" : "Networking",
     "firmware" : "CORE.4721",
-    "label" : "Router",
     "model" : "AN-310-RT-4L2W",
     "supported" : true,
-    "type" : "ROUTER_HUB",
-    "ovrcHome" : true,
-    "logTimeSeries" : true
+    attributes : [{
+      "type" : "ROUTER_HUB",
+      "label" : "Router",
+      "webconnect" : true,
+      "ovrcHome" : true,
+      "logTimeSeries" : true,
+      "hasWireless" : false
+    }]
   },
 
   /* 10 */
   {
     "_id" : "5ad7d009285bac42d02adeea",
-    "attributes" : {
-        "webconnect" : true,
-        "hasWireless" : true
-    },
     "brandName" : "Araknis Networks",
     "category" : "Networking",
     "firmware" : "CORE.4721",
-    "label" : "Router",
     "model" : "AN-110-RT-2L1W-WIFI",
     "supported" : true,
-    "type" : "ROUTER_HUB",
-    "ovrcHome" : true,
-    "logTimeSeries" : true
+    attributes : [{
+      "type" : "ROUTER_HUB",
+      "label" : "Router",
+      "webconnect" : true,
+      "ovrcHome" : true,
+      "logTimeSeries" : true,
+      "hasWireless" : true
+    }]
   }
 ];
 
@@ -424,12 +408,16 @@ var fw_data = [
     "attributes" : {},
     "prerequisites" : []
   }
-];
+]
 
-const cellEditProp = {
-  mode: 'click',
-  blurToSave: true
-};
+function booleanCheck(value){
+  if (value === null){
+    // use default attribute
+  }
+  if (value === true)
+    return <i class="check circle outline icon"></i>
+  else return <i class="circle outline icon" ></i>
+}
 
 // validator function pass the user input value and should return true|false.
 // function jobNameValidator(value) {
@@ -456,93 +444,136 @@ const cellEditProp = {
 //   return true;
 // }
 
-const products = [];
-
-function addProducts(quantity) {
-  const startId = products.length;
-  for (let i = 0; i < quantity; i++) {
-    const id = startId + i;
-    if (i < 3) {
-      products.push({
-        id: id,
-        name: 'Item name ' + id,
-        price: 2100 + i,
-        expand: [ {
-          fieldA: 'test1',
-          fieldB: (i + 1) * 99,
-          fieldC: (i + 1) * Math.random() * 100,
-          fieldD: '123eedd' + i
-        }, {
-          fieldA: 'test2',
-          fieldB: i * 99,
-          fieldC: i * Math.random() * 100,
-          fieldD: '123eedd' + i
-        } ]
-      });
-    } else {
-      products.push({
-        id: id,
-        name: 'Item name ' + id,
-        price: 2100 + i
-      });
+function populateCategory() {
+  let categories = []
+  for (var i = 0; i < dt_data.length; i++) {
+    if(categories.indexOf(dt_data[i]['category']) === -1){
+      categories.push(dt_data[i]['category'])
     }
   }
-}
-addProducts(5);
+  return categories
+};
 
-class BSTable extends React.Component {
+function populateBrand() {
+  //TODO: make brands filtered based on category selection
+  let brands = []
+  for (var i = 0; i < dt_data.length; i++){
+    if (brands.indexOf(dt_data[i]['brandName']) === -1){
+      brands.push(dt_data[i]['brandName'])
+    }
+  }
+  return brands
+};
+
+function populateModel() {
+  //TODO: make models filtered based on brand selection
+  let models = []
+  for (var i = 0; i < dt_data.length; i++){
+    if (models.indexOf(dt_data[i]['model']) === -1){
+      models.push(dt_data[i]['model'])
+    }
+  }
+  return models
+};
+
+function displaySSH(row){
+  //TODO: Make work
+  let sshtun = []
+  if (row['sshtunnel'] !== null){
+    sshtun.push(row['sshtunnel']['supports'])
+    sshtun.push(row['sshtunnel']['port'])
+    sshtun.push(row['sshtunnel']['protocol'])
+  }
+  return sshtun
+};
+
+// function calendar(row) {
+//   //TODO: add handle change
+//   return <DatePicker />
+// };
+
+class AttributesTable extends React.Component {
   render() {
+    if (this.props.data) {
       return (
-        <BootstrapTable data={ this.props.data }>
+        <BootstrapTable data={ this.props.data } striped>
           <TableHeaderColumn dataField='type' isKey={ true }>Type</TableHeaderColumn>
           <TableHeaderColumn dataField='label'>Label</TableHeaderColumn>
-          <TableHeaderColumn dataField='fieldC'>Field C</TableHeaderColumn>
-          <TableHeaderColumn dataField='fieldD'>Field D</TableHeaderColumn>
+          <TableHeaderColumn dataField='webconnect' dataFormat={booleanCheck}>webConnect</TableHeaderColumn>
+          <TableHeaderColumn dataField='ovrcHome' dataFormat={booleanCheck} >OvrC Home</TableHeaderColumn>
+          <TableHeaderColumn dataField='ovrcPro' dataFormat={booleanCheck}>OvrC Pro</TableHeaderColumn>
+          <TableHeaderColumn dataField='logTimeSeries' dataFormat={booleanCheck}>Time Series</TableHeaderColumn>
+          <TableHeaderColumn dataField='parentalControls' dataFormat={booleanCheck}>Parental Controls</TableHeaderColumn>
+          <TableHeaderColumn dataField='SSHTunnel' dataForm={displaySSH} > SSH Tunnel</TableHeaderColumn>
         </BootstrapTable>);
+    } else {
+      return (<p>?</p>);
+    }
   }
 }
 
 class App extends React.Component {
-  
+
+  isExpandableRow(row) {
+    return true;
+  }
+
   expandComponent(row) {
     return (
-      <BSTable data={ row.expand } />
+      <AttributesTable data={row.attributes} />
     );
-  };
+  }
   
   expandColumnComponent({ isExpandableRow, isExpanded }) {
+    let content = '';
+  
+    if (isExpandableRow) {
+      content = (isExpanded ? '(-)' : '(+)' );
+    } else {
+      content = ' ';
+    }
     return (
-      <div> { isExpanded ? '(-)' : '(+)'  } </div>
+      <div> { content } </div>
     );
   }
 
   render() {
     const options = {
-      expandRowBgColor: 'rgb(242, 255, 163)'
+      expandRowBgColor: 'rgb(66, 134, 244)',
+      expandBy: 'column',
     };
+    const keyBoardNav = {
+      enterToEdit: true
+    };
+    const cellEditProp = {
+      mode: 'click',
+    };
+
     return (
       <div>
         <center><h2>Device Types</h2></center>
         <BootstrapTable 
-          data={ dt_data } 
+          data={dt_data}
           cellEdit={ cellEditProp } 
           insertRow={ true }
           options={ options }
           striped
+          expandableRow={ this.isExpandableRow }
           expandComponent={ this.expandComponent }
           expandColumnOptions={ {
-            expandColumnVisible: true,
-            expandColumnComponent: this.expandColumnComponent,
-            columnWidth: 50
-          } }
+          expandColumnVisible: true,
+          expandColumnComponent: this.expandColumnComponent,
+          columnWidth: 40 }}
           search
-          pagination>
-            <TableHeaderColumn dataField='category' isKey={true} editable={ { type: 'select', options: {} } }>Category</TableHeaderColumn>
-            <TableHeaderColumn dataField='brandName' editable={ { type: 'select', options: {values:{} } }}>Brand</TableHeaderColumn>
-            <TableHeaderColumn dataField='model' editable={ { type: 'select', options: {values: {} } } }>Model</TableHeaderColumn>
-            <TableHeaderColumn dataField='firmware' editable={ { type: 'textarea'} }>Firmware Version</TableHeaderColumn>
-            <TableHeaderColumn dataField='platform' editable={ { type: 'textarea'} }>Platform (optional)</TableHeaderColumn>
-            <TableHeaderColumn dataField='supported' editable={ { type: 'checkbox', options: { values: 'true:false' } } }>Supported</TableHeaderColumn>
+          pagination
+          keyBoardNav = {keyBoardNav}>
+            <TableHeaderColumn dataField='_id' isKey={true} hidden editable={false} width={50}>ID</TableHeaderColumn>
+            <TableHeaderColumn dataField='category' expandable={false} editable={ { type: 'select', options: { values: populateCategory } }}>Category</TableHeaderColumn>
+            <TableHeaderColumn dataField='brandName' expandable={false} editable={ { type: 'select', options: {values: populateBrand } }}>Brand</TableHeaderColumn>
+            <TableHeaderColumn dataField='model' expandable={false} editable={ { type: 'select', options: {values: populateModel } } }>Model</TableHeaderColumn>
+            <TableHeaderColumn dataField='firmware' expandable={false} editable={ { type: 'textarea'} }>Firmware Version</TableHeaderColumn>
+            <TableHeaderColumn dataField='platform' expandable={false} editable={ { type: 'textarea'} }>Platform (optional)</TableHeaderColumn>
+            <TableHeaderColumn dataField='supported' expandable={false} editable={ { type: 'checkbox', options: { values: 'true:false' } } }>Supported</TableHeaderColumn>
         </BootstrapTable>
           <br/>
           <br/>
@@ -552,21 +583,18 @@ class App extends React.Component {
           cellEdit={ cellEditProp } 
           insertRow={ true }
           options={ options }
+          keyBoardNav = {keyBoardNav}
           striped
-          expandComponent={ this.expandComponent }
-          expandColumnOptions={ {
-            expandColumnVisible: true,
-            expandColumnComponent: this.expandColumnComponent,
-            columnWidth: 50
-          } }
           search
           pagination>
-            <TableHeaderColumn dataField='url' isKey={true} editable={ { type: 'textarea' } }>URL</TableHeaderColumn>
-            <TableHeaderColumn dataField='filesize' editable={ { type: 'textarea' }}>File Size</TableHeaderColumn>
-            <TableHeaderColumn dataField='releaseDate' editable={ { type: 'textarea' } }>Release Date</TableHeaderColumn>
-            <TableHeaderColumn dataField='releaseNotes' editable={ { type: 'textarea'} }>Release Notes</TableHeaderColumn>
+            <TableHeaderColumn dataField='_id' isKey={true} hidden editable={false}>ID</TableHeaderColumn>
+            <TableHeaderColumn dataField='url' editable={ { type: 'textarea' } } tdStyle={ { whiteSpace: 'normal' } } width={250}>URL</TableHeaderColumn>
+            <TableHeaderColumn dataField='filesize' editable={ { type: 'textarea' }} width={100}>File Size</TableHeaderColumn>
+            <TableHeaderColumn dataField='releaseDate' editable={ { type: 'textarea' } } width={140}>Release Date</TableHeaderColumn>
+            <TableHeaderColumn dataField='releaseNotes' editable={ { type: 'textarea'} } tdStyle={ { whiteSpace: 'normal' } }>Release Notes</TableHeaderColumn>
             <TableHeaderColumn dataField='tftpStatus' editable={ { type: 'textarea'} }>TFTP Status (optional)</TableHeaderColumn>
             <TableHeaderColumn dataField='tftpURL' editable={ { type: 'textarea' } }>TFTP URL</TableHeaderColumn>
+            <TableHeaderColumn dataField='models' editable={false} tdStyle={ { whiteSpace: 'normal' } }>Models</TableHeaderColumn>
         </BootstrapTable> <br/> <br/> </div>
     );
   }
