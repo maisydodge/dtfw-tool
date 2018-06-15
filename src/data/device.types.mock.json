@@ -1,0 +1,212 @@
+[
+    {
+        "_id": "5afb1609641aafe8b4a5f209",
+        "supported": true,
+        "category": "Media",
+        "brandName": "Binary",
+        "model": "B-900-MOIP-4K-CTRL",
+        "firmware": "1.0.1.9",
+        "attributes": [
+            {
+                "type": "MOIP",
+                "label": "MOIP",
+                "webconnect": true,
+                "ovrcHome": false,
+                "ovrcPro": false,
+                "logTimeSeries": false,
+                "parentalControls": false,
+                "sshtunnel": []
+            }
+        ]
+    },
+    {
+        "_id": "5af2055864f2c21302c8c27c",
+        "supported": true,
+        "category": "Media",
+        "brandName": "Binary",
+        "model": "B-900-MOIP-4K-CTRL",
+        "firmware": "1.0.1.5",
+        "attributes": [
+            {
+                "type": "MOIP",
+                "label": "MOIP",
+                "webconnect": true,
+                "ovrcHome": false,
+                "ovrcPro": false,
+                "logTimeSeries": false,
+                "parentalControls": false,
+                "sshtunnel": []
+            }
+        ]
+    },
+    {
+        "_id": "5aec6afd51ab139ffacbbcfa",
+        "supported": true,
+        "category": "Surveillance",
+        "brandName": "Luma",
+        "model": "LUM-310-NVR-16CH",
+        "firmware": "3.4.99.180503",
+        "attributes": [
+            {
+                "type": "NVR",
+                "label": "NVR",
+                "ovrcHome": true,
+                "ovrcPro": false,
+                "logTimeSeries": false,
+                "parentalControls": false,
+                "webconnect": false,
+                "sshtunnel": []
+            }
+        ]
+    },
+    {
+        "_id": "5ade00074287d3e09bf29b99",
+        "supported": true,
+        "category": "Power",
+        "brandName": "WattBox",
+        "model": "WB-900VS-IPV-18",
+        "firmware": "0.9.00",
+        "attributes": [
+            {
+                "type": "WATTBOX",
+                "label": "WattBox",
+                "ovrcHome": true,
+                "ovrcPro": false,
+                "logTimeSeries": false,
+                "parentalControls": false,
+                "webconnect": true,
+                "sshtunnel": {
+                    "supports": true,
+                    "port": 80.0,
+                    "protocol": "HTTP"
+                }
+            }
+        ]
+    },
+    {
+        "_id": "5ade00074287d3e09bf29b98",
+        "supported": true,
+        "category": "Power",
+        "brandName": "WattBox",
+        "model": "WB-700VS-IPV-12",
+        "firmware": "0.9.00",
+        "attributes": [
+            {
+                "type": "WATTBOX",
+                "label": "WattBox",
+                "webConnect": true,
+                "ovrcHome": true,
+                "ovrcPro": false,
+                "logTimeSeries": false,
+                "parentalControls": false,
+                "webconnect": true,
+                "sshtunnel": {
+                    "supports": true,
+                    "port": 80.0,
+                    "protocol": "HTTP"
+                }
+            }
+        ]
+    },
+    {
+        "_id": "5addda97285bac42d02adef6",
+        "supported": true,
+        "category": "Networking",
+        "brandName": "OvrC",
+        "model": "OVRC-300-PRO",
+        "firmware": "CORE.4721",
+        "attributes": [
+            {
+                "type": "HUB",
+                "label": "Hub",
+                "ovrcHome": false,
+                "ovrcPro": true,
+                "logTimeSeries": true,
+                "parentalControls": false,
+                "webconnect": true,
+                "sshtunnel": {
+                    "supports": true,
+                    "port": 80.0,
+                    "protocol": "HTTP"
+                }
+            }
+        ]
+    },
+    {
+        "_id": "5ad8caccb9d79e6a1d1d36ca",
+        "supported": true,
+        "category": "Surveillance",
+        "brandName": "Luma",
+        "model": "LUM-510-NVR-16CH",
+        "firmware": "3.4.95.170930",
+        "attributes": [
+            {
+                "type": "NVR",
+                "label": "NVR",
+                "ovrcHome": true,
+                "ovrcPro": false,
+                "logTimeSeries": false,
+                "parentalControls": false,
+                "webconnect": false,
+                "sshtunnel": []
+            }
+        ]
+    },
+    {
+        "_id": "5ad7d0ae285bac42d02adeec",
+        "brandName": "Araknis Networks",
+        "category": "Networking",
+        "firmware": "CORE.4721",
+        "model": "AN-510-RT-5L2W",
+        "supported": true,
+        "attributes": [
+            {
+                "type": "ROUTER_HUB",
+                "label": "Router",
+                "webconnect": true,
+                "ovrcHome": true,
+                "logTimeSeries": true,
+                "hasWireless": false,
+                "sshtunnel": []
+            }
+        ]
+    },
+    {
+        "_id": "5ad7d073285bac42d02adeeb",
+        "brandName": "Araknis Networks",
+        "category": "Networking",
+        "firmware": "CORE.4721",
+        "model": "AN-310-RT-4L2W",
+        "supported": true,
+        "attributes": [
+            {
+                "type": "ROUTER_HUB",
+                "label": "Router",
+                "webconnect": true,
+                "ovrcHome": true,
+                "logTimeSeries": true,
+                "hasWireless": false,
+                "sshtunnel": []
+            }
+        ]
+    },
+    {
+        "_id": "5ad7d009285bac42d02adeea",
+        "brandName": "Araknis Networks",
+        "category": "Networking",
+        "firmware": "CORE.4721",
+        "model": "AN-110-RT-2L1W-WIFI",
+        "supported": true,
+        "attributes": [
+            {
+                "type": "ROUTER_HUB",
+                "label": "Router",
+                "webconnect": true,
+                "ovrcHome": true,
+                "logTimeSeries": true,
+                "hasWireless": true,
+                "sshtunnel": []
+            }
+        ]
+    }
+]
