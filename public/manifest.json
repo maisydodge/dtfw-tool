@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "DTFW Tool",
+  "name": "Device Type and Firmware Upgrade Tool",
   "icons": [
     {
       "src": "favicon.ico",

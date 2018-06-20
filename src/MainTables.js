@@ -1,10 +1,17 @@
 import React from "react";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-//import MyCustomBody from "./MyCustomBody";
+
 import AttributesTable from "./AttributesTable";
-import CategoryField from "./CategoryField";
-import BrandField from "./BrandField";
+import {
+  customCategory,
+  customBrand,
+  customModel,
+  customID,
+  customFWModel,
+  customReleaseNotes
+} from "./modal/ModalUtils";
+
 import {
   makeUnique,
   booleanCheck,
@@ -16,18 +23,13 @@ import {
   fileSizeValidator,
   tftpURLValidator,
   formatModels,
-  filterOptions
+  filterOptions,
+  onAfterSaveCell,
+  onAfterInsertRow,
+  HTML2text
 } from "./Utils";
 import fw_data from "./data/firmware.upgrades.mock";
 import dt_data from "./data/device.types.mock.json";
-
-const cat_options = makeUnique(
-  dt_data.map(({ category }) => ({ value: category, text: category }))
-);
-
-const brand_options = makeUnique(
-  dt_data.map(({ brandName }) => ({ value: brandName, text: brandName }))
-);
 
 /*----- Default Attributes -----*/
 const defaultAttributes = {
@@ -38,11 +40,19 @@ const defaultAttributes = {
   parentalControls: false
 };
 
-class MainTables extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+/*----- Constants for filter dropdowns -----*/
+const cat_options = makeUnique(
+  dt_data.map(({ category }) => ({ value: category, text: category }))
+);
 
+const brand_options = makeUnique(
+  dt_data.map(({ brandName }) => ({ value: brandName, text: brandName }))
+);
+
+//TODO: declare state, fetch data, pass data into table
+/*----- Main Tables Class -----*/
+class MainTables extends React.Component {
+  /*----- Expand functions -----*/
   isExpandableRow(row) {
     return true;
   }
@@ -53,54 +63,24 @@ class MainTables extends React.Component {
 
   expandColumnComponent({ isExpandableRow, isExpanded }) {
     let content = "";
-
-    if (isExpandableRow) {
-      content = isExpanded ? "(-)" : "(+)";
-    } else {
-      content = " ";
-    }
+    if (isExpandableRow) content = isExpanded ? "(-)" : "(+)";
+    else content = " ";
     return <div> {content} </div>;
   }
 
-  //Use this to print attributes as well
-  onAfterInsertRow(row) {
-    let newRowStr = "";
-
-    for (const prop in row) {
-      newRowStr += prop + ": " + row[prop] + " \n";
-    }
-    alert("The new row is:\n " + newRowStr);
-  }
-
-  customCategory = (column, attr, editorClass, ignoreEditable, defaultValue) => {
-    console.log("in customCategory");
-    return (
-      <CategoryField ref={attr.ref} editorClass={editorClass} ignoreEditable={ignoreEditable} />
-    );
-  };
-
-  customBrand = (column, attr, editorClass, ignoreEditable, defaultValue) => {
-    console.log("in customBrand");
-    return <BrandField ref={attr.ref} editorClass={editorClass} ignoreEditable={ignoreEditable} />;
-  };
-
-  customModel = (column, attr, editorClass, ignoreEditable, defaultValue) => {
-    console.log("in customModel");
-    return <input type="text" {...attr} className={`${editorClass}`} />;
-  };
-
   render() {
     const options = {
-      expandRowBgColor: "rgb(66, 134, 244)",
+      expandRowBgColor: "rgb(64, 176, 202)",
       expandBy: "column",
-      afterInsertRow: this.onAfterInsertRow,
-      onAddRow: this.handleAddRow
+      afterInsertRow: onAfterInsertRow
+      //onAddRow: this.handleAddRow
     };
     const keyBoardNav = {
       enterToEdit: true
     };
     const cellEditProp = {
-      mode: "click"
+      mode: "click",
+      afterSaveCell: onAfterSaveCell
     };
 
     return (
@@ -120,7 +100,6 @@ class MainTables extends React.Component {
               cellEdit={cellEditProp}
               insertRow={true}
               options={options}
-              striped
               expandableRow={this.isExpandableRow}
               expandComponent={this.expandComponent}
               expandColumnOptions={{
@@ -128,19 +107,25 @@ class MainTables extends React.Component {
                 expandColumnComponent: this.expandColumnComponent,
                 columnWidth: 40
               }}
+              striped
               search
               pagination
               keyBoardNav={keyBoardNav}
             >
-              <TableHeaderColumn dataField="_id" isKey={true} hidden editable={false}>
+              <TableHeaderColumn
+                dataField="_id"
+                isKey={true}
+                hidden
+                editable={false}
+                customInsertEditor={{ getElement: customID }}
+              >
                 ID
               </TableHeaderColumn>
               <TableHeaderColumn
                 dataField="category"
                 expandable={false}
                 editable={{ type: "select", options: { values: populateCategory } }}
-                customInsertEditor={{ getElement: this.customCategory }}
-                filterFormatted
+                customInsertEditor={{ getElement: customCategory }}
                 filter={{ type: "SelectFilter", options: filterOptions(cat_options) }}
               >
                 Category
@@ -149,7 +134,7 @@ class MainTables extends React.Component {
                 dataField="brandName"
                 expandable={false}
                 editable={{ type: "select", options: { values: populateBrand } }}
-                customInsertEditor={{ getElement: this.customBrand }}
+                customInsertEditor={{ getElement: customBrand }}
                 filter={{ type: "SelectFilter", options: filterOptions(brand_options) }}
               >
                 Brand
@@ -158,21 +143,21 @@ class MainTables extends React.Component {
                 dataField="model"
                 expandable={false}
                 editable={{ type: "select", options: { values: populateModel } }}
-                customInsertEditor={{ getElement: this.customModel }}
+                customInsertEditor={{ getElement: customModel }}
               >
                 Model
               </TableHeaderColumn>
               <TableHeaderColumn
                 dataField="firmware"
                 expandable={false}
-                editable={{ type: "textarea" }}
+                editable={{ type: "textarea", defaultValue: "" }}
               >
                 Firmware Version
               </TableHeaderColumn>
               <TableHeaderColumn
                 dataField="platform"
                 expandable={false}
-                editable={{ type: "textarea" }}
+                editable={{ type: "textarea", defaultValue: "" }}
               >
                 Platform (optional)
               </TableHeaderColumn>
@@ -200,7 +185,13 @@ class MainTables extends React.Component {
               search
               pagination
             >
-              <TableHeaderColumn dataField="_id" isKey={true} hidden editable={false}>
+              <TableHeaderColumn
+                dataField="_id"
+                isKey={true}
+                hidden
+                editable={false}
+                customInsertEditor={{ getElement: customID }}
+              >
                 ID
               </TableHeaderColumn>
               <TableHeaderColumn
@@ -221,17 +212,15 @@ class MainTables extends React.Component {
               >
                 File Size
               </TableHeaderColumn>
-              <TableHeaderColumn
-                dataField="releaseDate"
-                editable={{ type: "textarea" }}
-                width={"140"}
-              >
+              <TableHeaderColumn dataField="releaseDate" editable={{ type: "date" }}>
                 Release Date
               </TableHeaderColumn>
               <TableHeaderColumn
                 dataField="releaseNotes"
                 editable={{ type: "textarea" }}
                 tdStyle={{ whiteSpace: "normal" }}
+                dataFormat={HTML2text}
+                customInsertEditor={{ getElement: customReleaseNotes }}
               >
                 Release Notes
               </TableHeaderColumn>
@@ -263,6 +252,7 @@ class MainTables extends React.Component {
                 editable={false}
                 tdStyle={{ whiteSpace: "normal" }}
                 dataFormat={formatModels}
+                customInsertEditor={{ getElement: customFWModel }}
               >
                 Models
               </TableHeaderColumn>
