@@ -33,7 +33,7 @@ class AttributesTable extends React.Component {
         </BootstrapTable>
       );
     } else {
-      return <p>Nothing to display.</p>;
+      return <p>No attributes to display.</p>;
     }
   }
 }

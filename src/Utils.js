@@ -10,34 +10,6 @@ const defaultAttributes = {
   parentalControls: false
 };
 
-/*------------ Validators ------------ */
-
-/**
- * Summary: Validate the inputs at the following cells : URL, fileSize, TFTP URL
- *    @param cell, the value of the cell (row.dataField)
- *    @return the value at the cell if valid, error statement if not.
- */
-export function urlValidator(cell) {
-  let regexp = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
-  if (!regexp.test(cell)) return alert("Not a valid URL");
-  else return cell;
-}
-
-export function fileSizeValidator(cell) {
-  const nan = isNaN(parseInt(cell, 10));
-  if (nan) return alert("File Size must be a integer!");
-  else return cell;
-}
-
-export function tftpURLValidator(cell, row) {
-  let regexp = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
-  if (row.tftpStatus === false || row.tftpStatus === "false" || row.tftpStatus === undefined) {
-    return "TFTP Status must be enabled to add URL.";
-  }
-  if (!regexp.test(cell) && cell !== undefined) return alert("Not a valid TFTP URL");
-  else return cell;
-}
-
 /*------------ Dropdown Populators ------------ */
 
 /**
@@ -94,8 +66,9 @@ export function populateModel(cell) {
  *              displaySSH displays the three elements of SSH Tunnels in one cell
  *              formatModels lists the models associated with each firmware ugrade
  *                           with newlines rather than commas
+ *              formatDate formats the date from the calendar to the complete ISO-8601 date
  *    @param cell, the value at the cell
- *    @return an icon, the values stored in 'sshtunnels', and array of models
+ *    @return an icon, the values stored in 'sshtunnels', and array of models, complete ISO-6801 date
  */
 
 export function booleanCheck(cell, row, onStatusUpdate) {
@@ -125,6 +98,45 @@ export function formatModels(cell) {
     models += cell[i] + "<br/>";
   }
   return models;
+}
+
+export function formatDate(cell) {
+  if (cell.includes("T00:00:00.000Z")) {
+    return cell.slice(0, 10);
+  } else {
+    var formatted = cell;
+    cell = cell + "T00:00:00.000Z";
+    return formatted;
+  }
+}
+
+/**
+ * Summary: Translates regular text to HTML unordered list for the firmware release notes
+ *    @param cell, the value stored in the cell
+ *    @return cell, the HTML unordered list of the original text
+ */
+export function text2HTML(cell) {
+  if (!cell) return "";
+
+  var text = "";
+  var lines = cell.split("\n");
+
+  for (var i = 0; i < lines.length; i++) {
+    text += "<li>" + lines[i] + "</li>";
+  }
+  text = "<ul>" + text + "</ul>";
+  cell = text;
+  return cell;
+}
+
+/**
+ * Summary: passed into dataFormat of release notes, makes string into object
+ *          not very sure why cell is passed as an object, which is why this works
+ * @param cell, the value of the cell (assuming it's passed as an object)
+ *    @return cell, HTML that displays as bulleted list
+ */
+export function HTML2text(cell) {
+  return cell;
 }
 
 /**
@@ -178,29 +190,28 @@ export function filterOptions(options) {
   return pairs;
 }
 
+//Might want this
 /**
  * Summary: After the cell saves post editing, alerts will display to confirm the changes
  *    @param row, the row that is being edited/saved
  *    @param cellName, the name of the cell that is being edited/saved
  *    @param cellValue, the new value of the cell after editing
  */
-export function onAfterSaveCell(row, cellName, cellValue) {
-  alert(`Save cell ${cellName} with value ${cellValue}`);
+// export function onAfterSaveCell(row, cellName, cellValue) {
+//   alert(`Save cell ${cellName} with value ${cellValue}`);
 
-  let rowStr = "";
-  for (const prop in row) {
-    rowStr += prop + ": " + row[prop] + "\n";
-  }
+//   let rowStr = "";
+//   for (const prop in row) {
+//     rowStr += prop + ": " + row[prop] + "\n";
+//   }
 
-  alert("The whole row :\n" + rowStr);
-}
+//   alert("The whole row :\n" + rowStr);
+// }
 
-//TODO: Update/fix this
 /**
  * Summary: After inserting a row, an alert confirming the properties of the new row is displayed
  *    @param row, the new row
  */
-//This will be used to set attributes from API - this could call another function getAttributes or something
 export function onAfterInsertRow(row) {
   let newRowStr = "";
   let newAttrStr = ""; //to displayed attributes
@@ -209,10 +220,14 @@ export function onAfterInsertRow(row) {
     newRowStr += prop + ": " + row[prop] + " \n";
   }
 
-  //this will need to be looped because not all will be undefined
+  //apply default attributes
   row["attributes"] = [];
-  if (row["attributes"][0] === undefined) {
-    row["attributes"][0] = defaultAttributes;
+  row["attributes"][0] = {};
+  for (var j = 0; j < Object.keys(defaultAttributes).length; j++) {
+    let key = Object.keys(defaultAttributes)[j];
+    if (row["attributes"][0][key] === undefined) {
+      row["attributes"][0][key] = defaultAttributes[key];
+    }
   }
 
   for (const prop in row["attributes"][0]) {
@@ -220,30 +235,4 @@ export function onAfterInsertRow(row) {
   }
 
   alert("The new row is:\n " + newRowStr + "\nAttributes: \n" + newAttrStr);
-}
-
-/**
- * Summary: Translates regular text to HTML unordered list for the firmware release notes
- *    @param cell, the value stored in the cell
- *    @return cell, the HTML unordered list of the original text
- */
-export function text2HTML(cell) {
-  var text = "";
-  var lines = cell.split("\n");
-  for (var i = 0; i < lines.length; i++) {
-    text += "<li>" + lines[i] + "</li>";
-  }
-  text = "<ul>" + text + "</ul>";
-  cell = text;
-  return cell;
-}
-
-/**
- * Summary: passed into dataFormat of release notes, makes string into object
- *          not very sure why cell is passed as an object, which is why this works
- * @param cell, the value of the cell (assuming it's passed as an object)
- *    @return cell, HTML that displays as bulleted list
- */
-export function HTML2text(cell) {
-  return cell;
 }

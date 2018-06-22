@@ -15,6 +15,10 @@ const brand_options = makeUnique(
 class BrandField extends React.Component {
   state = { brand_options };
 
+  addNull = brand_options => {
+    brand_options.push({ value: "", text: "" });
+  };
+
   getFieldValue = () => {
     console.log("Brand getFieldValue: ");
     let index = this.refs.selectedVal.state.selectedIndex;
@@ -42,6 +46,8 @@ class BrandField extends React.Component {
 
     console.log("Brand current value: " + currentValue);
     console.log("Brand current value index: " + this.findValue(brand_options, currentValue));
+
+    this.addNull(brand_options);
 
     return (
       <Dropdown

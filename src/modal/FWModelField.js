@@ -23,7 +23,7 @@ class FWModelField extends React.Component {
     return (
       <Input
         type="text"
-        value={this.state.value}
+        value={this.state.value} //get this value from API?
         fluid={true}
         placeholder="Models"
         disabled

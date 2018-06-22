@@ -15,6 +15,10 @@ const cat_options = makeUnique(
 class CategoryField extends React.Component {
   state = { cat_options };
 
+  addNull = cat_options => {
+    cat_options.push({ value: "", text: "" });
+  };
+
   getFieldValue = () => {
     console.log("Category getFieldValue: ");
     let index = this.refs.selectedVal.state.selectedIndex;
@@ -42,6 +46,8 @@ class CategoryField extends React.Component {
 
     console.log("Category current value: " + currentValue);
     console.log("Category current value index: " + this.findValue(cat_options, currentValue));
+
+    this.addNull(cat_options);
 
     return (
       <Dropdown

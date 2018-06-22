@@ -10,24 +10,28 @@
       homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
     -->
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+  <link rel="stylesheet" href="https://npmcdn.com/react-bootstrap-table/dist/react-bootstrap-table-all.min.css">
+  </link>
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="./dist/react-bootstrap-table.min.css">
-
+  <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+  <script src="https://use.fontawesome.com/f52b8fd2c4.js"></script>   -->
   <title>DTFW Tool</title>
 </head>
 
-<body>
+<body style="background-color:white; font-size:16px">
   <br/>
   <center>
-    <h1>Device Type and Firmware Upgrade Tool</h1>
+    <h1 style="color: orange; -webkit-text-stroke: 1px black; text-shadow: 2px 2px #42b9f4; text-transform: uppercase; font-size: 40px; letter-spacing: .2em">Device Type and Firmware Upgrade Tool</h1>
   </center>
   <br/>
   <noscript>
     You need to enable JavaScript to run this app.
   </noscript>
-  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-
-  <div id="root"></div>
+  <div id="root" style="background-color:white;"></div>
   <!--
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
