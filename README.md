@@ -1,5 +1,5 @@
 ```sh
-git clone 
+git clone https://github.com/maisydodge/dtfw-tool.git
 npm install
 npm start
 ```
