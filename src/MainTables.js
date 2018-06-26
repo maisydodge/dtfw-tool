@@ -13,18 +13,20 @@ import {
 } from "./modal/ModalUtils";
 
 import {
-  makeUnique,
-  booleanCheck,
-  applyDefaults,
-  populateBrand,
+  defaultAttributes,
+  cat_options,
+  brand_options,
   populateCategory,
+  populateBrand,
   populateModel,
+  booleanCheck,
   formatModels,
   formatDate,
+  HTML2text,
+  applyDefaults,
   filterOptions,
-  //onAfterSaveCell,
-  onAfterInsertRow,
-  HTML2text
+  onAfterSaveCell,
+  onAfterInsertRow
 } from "./Utils";
 
 import {
@@ -38,26 +40,11 @@ import {
 import fw_data from "./data/firmware.upgrades.mock";
 import dt_data from "./data/device.types.mock.json";
 
-/*----- Default Attributes -----*/
-const defaultAttributes = {
-  webconnect: true,
-  ovrcHome: true,
-  ovrcPro: false,
-  logTimeSeries: false,
-  parentalControls: false
-};
-
-/*----- Constants for filter dropdowns -----*/
-const cat_options = makeUnique(
-  dt_data.map(({ category }) => ({ value: category, text: category }))
-);
-
-const brand_options = makeUnique(
-  dt_data.map(({ brandName }) => ({ value: brandName, text: brandName }))
-);
-
-//TOD: declare state, fetch data, pass data into table
-/*----- Main Tables Class -----*/
+/*------- Main Tables -------*/
+/**
+ * Summary: The MainTables class contains two tables - one for device types and one for firmware upgrades.
+ *          React Tabs is used to separate the two tables into separate tabs.
+ */
 class MainTables extends React.Component {
   /*----- Expand functions -----*/
   isExpandableRow(row) {
@@ -86,8 +73,8 @@ class MainTables extends React.Component {
       enterToEdit: true
     };
     const cellEditProp = {
-      mode: "click"
-      //afterSaveCell: onAfterSaveCell
+      mode: "click",
+      afterSaveCell: onAfterSaveCell
     };
 
     const selectRowProp = {
@@ -113,9 +100,9 @@ class MainTables extends React.Component {
               data={applyDefaults(dt_data, defaultAttributes)}
               cellEdit={cellEditProp}
               insertRow={true}
-              options={options}
               deleteRow={true}
               exportCSV={true}
+              options={options}
               expandableRow={this.isExpandableRow}
               expandComponent={this.expandComponent}
               expandColumnOptions={{
@@ -171,7 +158,7 @@ class MainTables extends React.Component {
                 editable={{
                   type: "select",
                   options: { values: populateModel },
-                  validator: textValidator
+                  validator: selectValidator
                 }}
                 customInsertEditor={{ getElement: customModel }}
               >
@@ -262,7 +249,7 @@ class MainTables extends React.Component {
               </TableHeaderColumn>
               <TableHeaderColumn
                 dataField="releaseNotes"
-                editable={{ type: "textarea" }}
+                editable={{ type: "textarea", validator: textValidator }}
                 tdStyle={{ whiteSpace: "normal" }}
                 dataFormat={HTML2text}
                 customInsertEditor={{ getElement: customReleaseNotes }}
@@ -305,10 +292,10 @@ class MainTables extends React.Component {
               >
                 Models
               </TableHeaderColumn>
-            </BootstrapTable>{" "}
-            <br />{" "}
-          </TabPanel>{" "}
-        </div>{" "}
+            </BootstrapTable>
+            <br />
+          </TabPanel>
+        </div>
       </Tabs>
     );
   }

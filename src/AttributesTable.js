@@ -3,6 +3,11 @@ import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 
 import { booleanCheck, displaySSH } from "./Utils";
 
+/**
+ * Summary: The Attributes Table class is used to display the attributes of each device type.
+ *          The table is the expandable component of each row of the device types table.
+ *          The attributes are currently read only.
+ */
 class AttributesTable extends React.Component {
   render() {
     if (this.props.data) {

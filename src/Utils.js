@@ -2,13 +2,26 @@ import React from "react";
 import dt_data from "./data/device.types.mock.json";
 
 /*----- Default Attributes -----*/
-const defaultAttributes = {
+export const defaultAttributes = {
   webconnect: true,
   ovrcHome: true,
   ovrcPro: false,
   logTimeSeries: false,
   parentalControls: false
 };
+
+/*----- Constants for dropdowns -----*/
+export const cat_options = makeUnique(
+  dt_data.map(({ category }) => ({ value: category, text: category }))
+);
+
+export const brand_options = makeUnique(
+  dt_data.map(({ brandName }) => ({ value: brandName, text: brandName }))
+);
+
+export const model_options = makeUnique(
+  dt_data.map(({ model }) => ({ value: model, text: model }))
+);
 
 /*------------ Dropdown Populators ------------ */
 
@@ -61,23 +74,20 @@ export function populateModel(cell) {
 /*------------ Data Formatters ------------ */
 
 /**
- * Summary: Various export functions added to dataFormat of some cells
- * Description: booleanCheck replaces 'true' and 'false' with an icon
- *              displaySSH displays the three elements of SSH Tunnels in one cell
- *              formatModels lists the models associated with each firmware ugrade
- *                           with newlines rather than commas
- *              formatDate formats the date from the calendar to the complete ISO-8601 date
- *    @param cell, the value at the cell
- *    @return an icon, the values stored in 'sshtunnels', and array of models, complete ISO-6801 date
+ * Summary: Replaces 'true' and 'false' with an icon of a checked or unchecked circle
+ *    @param cell, either 'true' or 'false'
+ *    @return icon, a checked circle if true or an unchecked circle if false
  */
-
-export function booleanCheck(cell, row, onStatusUpdate) {
-  if (cell === true || cell === "true")
-    return <i className="check circle outline icon" onToggle={onStatusUpdate} />;
-  // when cell is false or undefined
-  else return <i className="circle outline icon" onToggle={onStatusUpdate} />;
+export function booleanCheck(cell) {
+  if (cell === true || cell === "true") return <i className="check circle outline icon" />;
+  else return <i className="circle outline icon" />;
 }
 
+/**
+ * Summary: displays the SSH properties of device types with ssh tunnel enabled
+ *    @param cell, either an empty array or an sshtunnel object with the properties supports, port, and protocol
+ *    @return "Not supported" if undefined or the values of the ssh tunnel properties
+ */
 export function displaySSH(cell) {
   if (cell === undefined || cell["supports"] === undefined) return "Not supported";
   return (
@@ -92,6 +102,12 @@ export function displaySSH(cell) {
   );
 }
 
+/**
+ * Summary: Formats the models associated with each firmware upgrade
+ *          Lists with newlines instead of commas
+ *    @param cell, the array of models assocaited with the firmware upgrade
+ *    @return models, the string of models separated with newlines
+ */
 export function formatModels(cell) {
   let models = "";
   for (var i = 0; i < cell.length; i++) {
@@ -100,6 +116,13 @@ export function formatModels(cell) {
   return models;
 }
 
+/**
+ * Summary: Formats the firmware upgrade Release Date column
+ *          If received in full ISO 8601 format,
+ * @param cell, the value of release date
+ * @return If received in full ISO 8601 format, will display only YYYY/MM/DD
+ *         If received in YYYY/MM/DD, will store full ISO 8601 but display YYYY/MM/DD
+ */
 export function formatDate(cell) {
   if (cell.includes("T00:00:00.000Z")) {
     return cell.slice(0, 10);
@@ -130,18 +153,24 @@ export function text2HTML(cell) {
 }
 
 /**
- * Summary: passed into dataFormat of release notes, makes string into object
- *          not very sure why cell is passed as an object, which is why this works
- * @param cell, the value of the cell (assuming it's passed as an object)
+ * Summary: Formats the display of Release Notes
+ *          If cell contains an HTML list, it will be displayed as a bulleted list
+ *          If cell contains plain text, it is passed through text2HTML to make into HTML list
+ *    @param cell, the value of release notes
  *    @return cell, HTML that displays as bulleted list
  */
 export function HTML2text(cell) {
+  if (!cell.includes("<ul>", "</ul>", "<li>", "</li>")) {
+    return text2HTML(cell);
+  }
   return cell;
 }
 
+/*------------ Misc ------------ */
+
 /**
- * Summary: Give the undefined attributes the default values
- *          Used before populating the table
+ * Summary: Gives the undefined attributes the default values
+ *          Used before populating the table and when adding new device types
  *    @param data, specifically dt_data
  *    @return data, modified to have the default attributes included
  */
@@ -190,27 +219,20 @@ export function filterOptions(options) {
   return pairs;
 }
 
-//Might want this
 /**
- * Summary: After the cell saves post editing, alerts will display to confirm the changes
+ * Summary: After the cell saves post editing, alert will display to confirm the changes
  *    @param row, the row that is being edited/saved
  *    @param cellName, the name of the cell that is being edited/saved
  *    @param cellValue, the new value of the cell after editing
  */
-// export function onAfterSaveCell(row, cellName, cellValue) {
-//   alert(`Save cell ${cellName} with value ${cellValue}`);
-
-//   let rowStr = "";
-//   for (const prop in row) {
-//     rowStr += prop + ": " + row[prop] + "\n";
-//   }
-
-//   alert("The whole row :\n" + rowStr);
-// }
+export function onAfterSaveCell(row, cellName, cellValue) {
+  alert(`Save cell ${cellName} with value ${cellValue}`);
+}
 
 /**
  * Summary: After inserting a row, an alert confirming the properties of the new row is displayed
  *    @param row, the new row
+ *    @return alert confirming the new row properties
  */
 export function onAfterInsertRow(row) {
   let newRowStr = "";

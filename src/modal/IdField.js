@@ -2,34 +2,22 @@ import React from "react";
 import { Input } from "semantic-ui-react";
 
 /**
- * Summary: Class for the custom insert modal, disables ID edit feature
+ * Summary: Class for the custom insert modal of both device types and firmware upgrades
+ *          Disables ID edit feature
  *    @return uneditable ID field
  */
-//Might be able to display ID and keep uneditable?
 class IdField extends React.Component {
-  state = { value: "" };
-
-  handleChange = (e, { value }) => this.setState({ value: value });
+  state = { value: "7" };
 
   getFieldValue = () => {
-    console.log("ID getFieldValue: ");
-    console.log(this.state);
+    console.log("ID getFieldValue: " + this.state);
     return this.state;
   };
 
   render() {
-    console.log(this.state.value);
+    console.log("ID value is: " + this.state.value);
 
-    return (
-      <Input
-        type="text"
-        value={this.state.value} //get this value from API?
-        fluid={true}
-        placeholder="ID"
-        disabled
-        onChange={this.handleChange}
-      />
-    );
+    return <Input type="text" value={this.state.value} fluid={true} placeholder="ID" disabled />;
   }
 }
 

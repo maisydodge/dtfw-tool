@@ -1,23 +1,15 @@
 import React from "react";
 import { Dropdown } from "semantic-ui-react";
 
-import { makeUnique } from "../Utils";
-import dt_data from "../data/device.types.mock.json";
-
-const brand_options = makeUnique(
-  dt_data.map(({ brandName }) => ({ value: brandName, text: brandName }))
-);
+import { brand_options } from "../Utils";
+import { addNull, findValue } from "./ModalUtils";
 
 /**
- * Summary: Class for the custom insert modal, allows for addition of new brands
+ * Summary: Class for the custom insert modal of device types, allows for addition of new brands if desired
  *    @return select field, Semantic UI React dropdowns that allow additions
  */
 class BrandField extends React.Component {
   state = { brand_options };
-
-  addNull = brand_options => {
-    brand_options.push({ value: "", text: "" });
-  };
 
   getFieldValue = () => {
     console.log("Brand getFieldValue: ");
@@ -34,20 +26,13 @@ class BrandField extends React.Component {
 
   handleChange = (e, { value }) => this.setState({ currentValue: value });
 
-  findValue(array, value) {
-    for (var i = 0; i < array.length; i++) {
-      if (array[i].text === value) return i;
-    }
-    return -1;
-  }
-
   render() {
     const { currentValue } = this.state;
 
     console.log("Brand current value: " + currentValue);
-    console.log("Brand current value index: " + this.findValue(brand_options, currentValue));
+    console.log("Brand current value index: " + findValue(brand_options, currentValue));
 
-    this.addNull(brand_options);
+    addNull(brand_options);
 
     return (
       <Dropdown

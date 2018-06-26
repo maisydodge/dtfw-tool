@@ -1,30 +1,50 @@
 import React from "react";
-import { Input } from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
+
+import { model_options } from "../Utils";
+import { addNull, findValue } from "./ModalUtils";
 
 /**
- * Summary: Class for the custom insert modal, allows for addition of new models
- *    @return input object, Semantic UI React input
+ * Summary: Class for the device types custom insert modal, allows for addition of new models
+ *    @return select field, Semantic UI React dropdowns that allow additions
  */
 class ModelField extends React.Component {
-  state = { value: "" };
-
-  handleChange = (e, { value }) => this.setState({ value: value });
+  state = { model_options };
 
   getFieldValue = () => {
     console.log("Model getFieldValue: ");
-    console.log(this.state);
-    return this.state.value;
+    let index = this.refs.selectedVal.state.selectedIndex;
+    console.log(model_options[index]);
+    return model_options[index].value;
   };
 
+  // handleAddition = (e, { value }) => {
+  //   this.setState({
+  //     options: [{ text: value, value }, ...this.state.cat_options]
+  //   });
+  // };
+
+  handleChange = (e, { value }) => this.setState({ value: value });
+
   render() {
-    console.log(this.state.value);
+    const { currentValue } = this.state;
+
+    console.log("Model current value: " + currentValue);
+    console.log("Model current value index: " + findValue(model_options, currentValue));
+
+    addNull(model_options);
 
     return (
-      <Input
-        type="text"
-        value={this.state.value}
-        fluid={true}
-        placeholder="Enter Model"
+      <Dropdown
+        ref="selectedVal"
+        options={this.state.model_options}
+        placeholder="Choose Model"
+        search
+        selection
+        fluid
+        //allowAdditions
+        value={currentValue}
+        //onAddItem={this.handleAddition}
         onChange={this.handleChange}
       />
     );
