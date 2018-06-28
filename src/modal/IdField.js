@@ -7,7 +7,7 @@ import { Input } from "semantic-ui-react";
  *    @return uneditable ID field
  */
 class IdField extends React.Component {
-  state = { value: "7" };
+  state = { value: "" };
 
   getFieldValue = () => {
     console.log("ID getFieldValue: " + this.state);

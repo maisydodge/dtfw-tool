@@ -32,7 +32,9 @@ class BrandField extends React.Component {
     console.log("Brand current value: " + currentValue);
     console.log("Brand current value index: " + findValue(brand_options, currentValue));
 
-    addNull(brand_options);
+    if (brand_options[brand_options.length - 1].value !== "") {
+      addNull(brand_options);
+    }
 
     return (
       <Dropdown

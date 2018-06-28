@@ -178,7 +178,7 @@ class MainTables extends React.Component {
               <TableHeaderColumn
                 dataField="platform"
                 expandable={false}
-                editable={{ type: "textarea", defaultValue: "", placeholder: "Enter Platform" }}
+                editable={{ type: "textarea", placeholder: "Enter Platform" }}
               >
                 Platform (optional)
               </TableHeaderColumn>

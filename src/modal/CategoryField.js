@@ -32,8 +32,11 @@ class CategoryField extends React.Component {
     console.log("Category current value: " + currentValue);
     console.log("Category current value index: " + findValue(cat_options, currentValue));
 
-    addNull(cat_options);
+    if (cat_options[cat_options.length - 1].value !== "") {
+      addNull(cat_options);
+    }
 
+    console.log(cat_options);
     return (
       <Dropdown
         ref="selectedVal"

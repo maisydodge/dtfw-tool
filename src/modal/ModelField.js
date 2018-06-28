@@ -32,7 +32,9 @@ class ModelField extends React.Component {
     console.log("Model current value: " + currentValue);
     console.log("Model current value index: " + findValue(model_options, currentValue));
 
-    addNull(model_options);
+    if (model_options[model_options.length - 1].value !== "") {
+      addNull(model_options);
+    }
 
     return (
       <Dropdown
