@@ -8,6 +8,7 @@ import { booleanCheck, displaySSH } from "./Utils";
  *          The table is the expandable component of each row of the device types table.
  *          The attributes are currently read only.
  */
+
 class AttributesTable extends React.Component {
   render() {
     if (this.props.data) {

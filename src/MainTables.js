@@ -38,14 +38,39 @@ import {
 } from "./Validators";
 
 import fw_data from "./data/firmware.upgrades.mock";
-import dt_data from "./data/device.types.mock.json";
+//import dt_data from "./data/device.types.mock.json";
 
 /*------- Main Tables -------*/
 /**
  * Summary: The MainTables class contains two tables - one for device types and one for firmware upgrades.
  *          React Tabs is used to separate the two tables into separate tabs.
  */
+
 class MainTables extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      data: []
+    };
+  }
+
+  componentDidMount() {
+    fetch("https://34.229.145.29/devicetypes", {
+      method: "POST",
+      headers: { "Allow-Control-Allow-Origin": "", "Content-Type": "application/json" },
+      body: {
+        Action: "Read"
+      }
+    })
+      .then(result => {
+        result.json();
+      })
+      .then(data => {
+        console.log(data);
+        this.setState({ data });
+      });
+  }
+
   /*----- Expand functions -----*/
   isExpandableRow(row) {
     return true;
@@ -97,7 +122,11 @@ class MainTables extends React.Component {
             </center>
             <BootstrapTable
               ref="table"
-              data={applyDefaults(dt_data, defaultAttributes)}
+              // data={applyDefaults(
+              //   dt_data,
+              //   defaultAttributes
+              // )}
+              data={applyDefaults(this.state.data, defaultAttributes)}
               cellEdit={cellEditProp}
               insertRow={true}
               deleteRow={true}

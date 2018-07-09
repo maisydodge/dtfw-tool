@@ -257,4 +257,23 @@ export function onAfterInsertRow(row) {
   }
 
   alert("The new row is:\n " + newRowStr + "\nAttributes: \n" + newAttrStr);
+
+  // //request create
+  // fetch("https://34.229.145.29/", {
+  //   method: "POST",
+  //   body: {
+  //     action: "Create",
+  //     parent: "", //idk
+  //     documents: ""
+  //   },
+  //   headers: "Content-Type: application/json"
+  // })
+  //   .then(result => {
+  //     console.log(result);
+  //     return result.json();
+  //   })
+  //   .then(data => {
+  //     console.log(data);
+  //     this.setState({ data });
+  //   });
 }
