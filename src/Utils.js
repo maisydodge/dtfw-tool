@@ -124,11 +124,11 @@ export function formatModels(cell) {
  *         If received in YYYY/MM/DD, will store full ISO 8601 but display YYYY/MM/DD
  */
 export function formatDate(cell) {
-  if (cell.includes("T00:00:00.000Z")) {
+  if (cell.includes("T00:00:00Z")) {
     return cell.slice(0, 10);
   } else {
     var formatted = cell;
-    cell = cell + "T00:00:00.000Z";
+    cell = cell + "T00:00:00Z";
     return formatted;
   }
 }
@@ -176,13 +176,18 @@ export function HTML2text(cell) {
  */
 export function applyDefaults(data, defaultAttributes) {
   for (var i = 0; i < data.length; i++) {
-    let attributes = data[i]["attributes"][0];
+    let new_attrs = [];
+    new_attrs.push(data[i].attributes);
+    let attributes = new_attrs;
     for (var j = 0; j < Object.keys(defaultAttributes).length; j++) {
       let key = Object.keys(defaultAttributes)[j];
-      if (attributes[key] === undefined) {
-        attributes[key] = defaultAttributes[key];
+      if (attributes[0][key] === undefined) {
+        attributes[0][key] = defaultAttributes[key];
       }
     }
+    attributes[0].type = data[i].type; // add type to attributes to display in expandable
+    attributes[0].label = data[i].label; // add label to attributes to display in expandable
+    data[i].attributes = attributes;
   }
   return data;
 }
