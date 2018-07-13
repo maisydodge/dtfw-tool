@@ -11,13 +11,13 @@ class FWModelField extends React.Component {
   handleChange = (e, { value }) => this.setState({ value: value });
 
   getFieldValue = () => {
-    console.log("Firmware Model getFieldValue :");
-    console.log(this.state);
-    return this.state;
+    //console.log("Firmware Model getFieldValue :");
+    //console.log(this.state.value);
+    return this.state.value;
   };
 
   render() {
-    console.log(this.state.value);
+    //console.log(this.state.value);
 
     return (
       <Input
@@ -25,7 +25,7 @@ class FWModelField extends React.Component {
         value={this.state.value}
         fluid={true}
         placeholder="Models"
-        disabled
+        disabled //can enable if needed
         onChange={this.handleChange}
       />
     );

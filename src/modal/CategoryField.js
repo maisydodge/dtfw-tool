@@ -2,20 +2,22 @@ import React from "react";
 import { Dropdown } from "semantic-ui-react";
 
 import { cat_options } from "../Utils";
-import { addNull, findValue } from "./ModalUtils";
+import { addNull } from "./ModalUtils";
 
 /**
  * Summary: Class for the custom insert modal of device types, allows for addition of new categories if desired
  *    @return select field, Semantic UI React dropdowns that allow additions
  */
 class CategoryField extends React.Component {
-  state = { cat_options };
+  state = {
+    categories: cat_options(this.props.data)
+  };
 
   getFieldValue = () => {
-    console.log("Category getFieldValue: ");
+    //console.log("Category getFieldValue: ");
     let index = this.refs.selectedVal.state.selectedIndex;
-    console.log(cat_options[index]);
-    return cat_options[index].value;
+    //console.log(this.state.categories[index]);
+    return this.state.categories[index].value;
   };
 
   // handleAddition = (e, { value }) => {
@@ -27,20 +29,19 @@ class CategoryField extends React.Component {
   handleChange = (e, { value }) => this.setState({ currentValue: value });
 
   render() {
-    const { currentValue } = this.state;
+    const { currentValue } = this.state.categories;
 
-    console.log("Category current value: " + currentValue);
-    console.log("Category current value index: " + findValue(cat_options, currentValue));
+    //console.log("Category current value: " + currentValue);
+    //console.log("Category current value index: " + findValue(cat_options, currentValue));
 
-    if (cat_options[cat_options.length - 1].value !== "") {
-      addNull(cat_options);
+    if (this.state.categories[this.state.categories.length - 1].value !== "") {
+      addNull(this.state.categories);
     }
 
-    console.log(cat_options);
     return (
       <Dropdown
         ref="selectedVal"
-        options={this.state.cat_options}
+        options={this.state.categories}
         placeholder="Choose Category"
         search
         selection

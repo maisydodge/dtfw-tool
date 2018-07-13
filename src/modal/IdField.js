@@ -1,23 +1,34 @@
 import React from "react";
-import { Input } from "semantic-ui-react";
+import { Form, Input } from "semantic-ui-react";
 
 /**
  * Summary: Class for the custom insert modal of both device types and firmware upgrades
- *          Disables ID edit feature
- *    @return uneditable ID field
+ *    @return editable ID field
  */
 class IdField extends React.Component {
   state = { value: "" };
 
   getFieldValue = () => {
-    console.log("ID getFieldValue: " + this.state);
-    return this.state;
+    //console.log("ID getFieldValue: " + this.state.value);
+    return this.state.value;
   };
 
-  render() {
-    console.log("ID value is: " + this.state.value);
+  handleChange = (e, { value }) => this.setState({ value: value });
 
-    return <Input type="text" value={this.state.value} fluid={true} placeholder="ID" disabled />;
+  render() {
+    //console.log("ID value is: " + this.state.value);
+
+    return (
+      <Form>
+        <Input
+          type="text"
+          value={this.state.value}
+          placeholder="Enter ID"
+          fluid={true}
+          onChange={this.handleChange}
+        />
+      </Form>
+    );
   }
 }
 

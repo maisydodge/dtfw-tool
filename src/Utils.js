@@ -1,5 +1,4 @@
 import React from "react";
-import dt_data from "./data/device.types.mock.json";
 
 /*----- Default Attributes -----*/
 export const defaultAttributes = {
@@ -11,17 +10,21 @@ export const defaultAttributes = {
 };
 
 /*----- Constants for dropdowns -----*/
-export const cat_options = makeUnique(
-  dt_data.map(({ category }) => ({ value: category, text: category }))
-);
 
-export const brand_options = makeUnique(
-  dt_data.map(({ brandName }) => ({ value: brandName, text: brandName }))
-);
+export function cat_options(data) {
+  return makeUnique(data.map(({ category }) => ({ value: category, text: category })));
+}
 
-export const model_options = makeUnique(
-  dt_data.map(({ model }) => ({ value: model, text: model }))
-);
+export function brand_options(data) {
+  return makeUnique(data.map(({ brandName }) => ({ value: brandName, text: brandName })));
+}
+// export const brand_options = makeUnique(
+//   dt_data.map(({ brandName }) => ({ value: brandName, text: brandName }))
+// );
+
+export function model_options(data) {
+  return makeUnique(data.map(({ model }) => ({ value: model, text: model })));
+}
 
 /*------------ Dropdown Populators ------------ */
 
@@ -32,44 +35,44 @@ export const model_options = makeUnique(
  *    @param cell
  *    @return categories, brands, models - arrays of dropdown selection options
  */
-export function populateCategory(cell) {
-  let categories = [];
-  for (var i = 0; i < dt_data.length; i++) {
-    if (categories.indexOf(dt_data[i]["category"]) === -1) {
-      categories.push(dt_data[i]["category"]);
-    }
-  }
-  return categories;
-}
+// export function populateCategory(cell) {
+//   let categories = [];
+//   for (var i = 0; i < dt_data.length; i++) {
+//     if (categories.indexOf(dt_data[i]["category"]) === -1) {
+//       categories.push(dt_data[i]["category"]);
+//     }
+//   }
+//   return categories;
+// }
 
-export function populateBrand(cell) {
-  let brands = [];
-  for (var i = 0; i < dt_data.length; i++) {
-    if (brands.indexOf(dt_data[i]["brandName"]) === -1) {
-      if (cell === undefined || dt_data[i]["category"] === cell.category) {
-        brands.push(dt_data[i]["brandName"]);
-      }
-    }
-  }
-  return brands;
-}
+// export function populateBrand(cell) {
+//   let brands = [];
+//   for (var i = 0; i < dt_data.length; i++) {
+//     if (brands.indexOf(dt_data[i]["brandName"]) === -1) {
+//       if (cell === undefined || dt_data[i]["category"] === cell.category) {
+//         brands.push(dt_data[i]["brandName"]);
+//       }
+//     }
+//   }
+//   return brands;
+// }
 
-export function populateModel(cell) {
-  let models = [];
-  for (var i = 0; i < dt_data.length; i++) {
-    if (models.indexOf(dt_data[i]["model"]) === -1) {
-      if (cell === undefined) {
-        models.push(dt_data[i]["model"]);
-      } else if (
-        dt_data[i]["category"] === cell.category &&
-        dt_data[i]["brandName"] === cell.brandName
-      ) {
-        models.push(dt_data[i]["model"]);
-      }
-    }
-  }
-  return models;
-}
+// export function populateModel(cell) {
+//   let models = [];
+//   for (var i = 0; i < dt_data.length; i++) {
+//     if (models.indexOf(dt_data[i]["model"]) === -1) {
+//       if (cell === undefined) {
+//         models.push(dt_data[i]["model"]);
+//       } else if (
+//         dt_data[i]["category"] === cell.category &&
+//         dt_data[i]["brandName"] === cell.brandName
+//       ) {
+//         models.push(dt_data[i]["model"]);
+//       }
+//     }
+//   }
+//   return models;
+// }
 
 /*------------ Data Formatters ------------ */
 
@@ -79,8 +82,13 @@ export function populateModel(cell) {
  *    @return icon, a checked circle if true or an unchecked circle if false
  */
 export function booleanCheck(cell) {
-  if (cell === true || cell === "true") return <i className="check circle outline icon" />;
-  else return <i className="circle outline icon" />;
+  if (cell === "true" || cell === true) {
+    cell = true;
+    return <i className="check circle outline icon" />;
+  } else {
+    cell = false;
+    return <i className="circle outline icon" />;
+  }
 }
 
 /**
@@ -166,6 +174,42 @@ export function HTML2text(cell) {
   return cell;
 }
 
+export function allCaps(cell) {
+  var upper = cell.toUpperCase();
+  //console.log(upper);
+  return upper;
+}
+
+export function attrFormatter(cell) {
+  if (cell !== null && cell instanceof Object) {
+    return cell;
+  }
+  var myobject = {};
+  var lines = cell.split("\n");
+  for (var i = 0; i < lines.length; i++) {
+    let current = lines[i].split(":");
+    myobject[current[0]] = current[1];
+  }
+  //console.log("ATTR:" + JSON.stringify(myobject));
+  return myobject;
+}
+
+export function prereqFormatter(cell) {
+  if (cell !== null && cell.constructor === Array) {
+    return cell;
+  }
+  var myarray = [];
+  var myobject = {};
+  var lines = cell.split("\n");
+  for (var i = 0; i < lines.length; i++) {
+    let current = lines[i].split(":");
+    myobject[current[0]] = current[1];
+  }
+  myarray[0] = myobject;
+  //console.log("PREREQ: " + JSON.stringify(myarray));
+  return myarray;
+}
+
 /*------------ Misc ------------ */
 
 /**
@@ -176,6 +220,9 @@ export function HTML2text(cell) {
  */
 export function applyDefaults(data, defaultAttributes) {
   for (var i = 0; i < data.length; i++) {
+    if (data[i].attributes === undefined) {
+      data[i].attributes = [];
+    }
     let new_attrs = [];
     new_attrs.push(data[i].attributes);
     let attributes = new_attrs;
@@ -224,61 +271,12 @@ export function filterOptions(options) {
   return pairs;
 }
 
-/**
- * Summary: After the cell saves post editing, alert will display to confirm the changes
- *    @param row, the row that is being edited/saved
- *    @param cellName, the name of the cell that is being edited/saved
- *    @param cellValue, the new value of the cell after editing
- */
-export function onAfterSaveCell(row, cellName, cellValue) {
-  alert(`Save cell ${cellName} with value ${cellValue}`);
-}
-
-/**
- * Summary: After inserting a row, an alert confirming the properties of the new row is displayed
- *    @param row, the new row
- *    @return alert confirming the new row properties
- */
 export function onAfterInsertRow(row) {
   let newRowStr = "";
-  let newAttrStr = ""; //to displayed attributes
 
   for (const prop in row) {
     newRowStr += prop + ": " + row[prop] + " \n";
   }
 
-  //apply default attributes
-  row["attributes"] = [];
-  row["attributes"][0] = {};
-  for (var j = 0; j < Object.keys(defaultAttributes).length; j++) {
-    let key = Object.keys(defaultAttributes)[j];
-    if (row["attributes"][0][key] === undefined) {
-      row["attributes"][0][key] = defaultAttributes[key];
-    }
-  }
-
-  for (const prop in row["attributes"][0]) {
-    newAttrStr += prop + ": " + row["attributes"][0][prop] + " \n";
-  }
-
-  alert("The new row is:\n " + newRowStr + "\nAttributes: \n" + newAttrStr);
-
-  // //request create
-  // fetch("https://34.229.145.29/", {
-  //   method: "POST",
-  //   body: {
-  //     action: "Create",
-  //     parent: "", //idk
-  //     documents: ""
-  //   },
-  //   headers: "Content-Type: application/json"
-  // })
-  //   .then(result => {
-  //     console.log(result);
-  //     return result.json();
-  //   })
-  //   .then(data => {
-  //     console.log(data);
-  //     this.setState({ data });
-  //   });
+  alert("The new row is:\n " + newRowStr);
 }

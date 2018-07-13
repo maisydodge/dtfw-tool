@@ -12,8 +12,8 @@ class ReleaseNotesField extends React.Component {
   handleChange = (e, { value }) => this.setState({ value: value });
 
   getFieldValue = () => {
-    console.log("Release Notes getFieldValue: ");
-    console.log(text2HTML(this.state.value));
+    //console.log("Release Notes getFieldValue: ");
+    //console.log(text2HTML(this.state.value));
     return text2HTML(this.state.value);
   };
 

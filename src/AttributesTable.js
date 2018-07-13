@@ -28,7 +28,7 @@ class AttributesTable extends React.Component {
             OvrC Pro
           </TableHeaderColumn>
           <TableHeaderColumn dataField="logTimeSeries" dataFormat={booleanCheck}>
-            Time Series
+            Log Time Series
           </TableHeaderColumn>
           <TableHeaderColumn dataField="parentalControls" dataFormat={booleanCheck}>
             Parental Controls

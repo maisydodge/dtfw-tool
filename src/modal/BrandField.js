@@ -2,20 +2,22 @@ import React from "react";
 import { Dropdown } from "semantic-ui-react";
 
 import { brand_options } from "../Utils";
-import { addNull, findValue } from "./ModalUtils";
+import { addNull } from "./ModalUtils";
 
 /**
  * Summary: Class for the custom insert modal of device types, allows for addition of new brands if desired
  *    @return select field, Semantic UI React dropdowns that allow additions
  */
 class BrandField extends React.Component {
-  state = { brand_options };
+  state = {
+    brands: brand_options(this.props.data)
+  };
 
   getFieldValue = () => {
-    console.log("Brand getFieldValue: ");
+    //console.log("Brand getFieldValue: ");
     let index = this.refs.selectedVal.state.selectedIndex;
-    console.log(brand_options[index]);
-    return brand_options[index].value;
+    //console.log(this.state.brands[index]);
+    return this.state.brands[index].value;
   };
 
   // handleAddition = (e, { value }) => {
@@ -27,19 +29,19 @@ class BrandField extends React.Component {
   handleChange = (e, { value }) => this.setState({ currentValue: value });
 
   render() {
-    const { currentValue } = this.state;
+    const { currentValue } = this.state.brands;
 
-    console.log("Brand current value: " + currentValue);
-    console.log("Brand current value index: " + findValue(brand_options, currentValue));
+    //console.log("Brand current value: " + currentValue);
+    //console.log("Brand current value index: " + findValue(brand_options, currentValue));
 
-    if (brand_options[brand_options.length - 1].value !== "") {
-      addNull(brand_options);
+    if (this.state.brands[this.state.brands.length - 1].value !== "") {
+      addNull(this.state.brands);
     }
 
     return (
       <Dropdown
         ref="selectedVal"
-        options={this.state.brand_options}
+        options={this.state.brands}
         placeholder="Choose Brand"
         search
         selection
