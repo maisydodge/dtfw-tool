@@ -1,31 +1,50 @@
 import React from "react";
-import { Input } from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
+
+import { fwmodel_options } from "../Utils";
+import { addNull } from "./ModalUtils";
 
 /**
- * Summary: Class for the custom insert modal for firmware upgrades, disables Models edit feature
- *    @return uneditable Models field
+ * Summary: Class for the device types custom insert modal, allows for addition of new models
+ *    @return select field, Semantic UI React dropdowns that allow additions
  */
 class FWModelField extends React.Component {
-  state = { value: "" };
-
-  handleChange = (e, { value }) => this.setState({ value: value });
+  state = {
+    models: fwmodel_options(this.props.data),
+    selected: []
+  };
 
   getFieldValue = () => {
-    //console.log("Firmware Model getFieldValue :");
-    //console.log(this.state.value);
-    return this.state.value;
+    return this.state.selected;
+  };
+
+  // handleAddition = (e, { value }) => {
+  //   this.setState({
+  //     options: [{ text: value, value }, ...]
+  //   });
+  // };
+
+  handleChange = (e, { value }) => {
+    this.setState({ selected: value });
   };
 
   render() {
-    //console.log(this.state.value);
+    if (this.state.models[this.state.models.length - 1].value !== "") {
+      addNull(this.state.models);
+    }
 
     return (
-      <Input
-        type="text"
-        value={this.state.value}
-        fluid={true}
-        placeholder="Models"
-        disabled //can enable if needed
+      <Dropdown
+        ref="selectedVal"
+        options={this.state.models}
+        placeholder="Choose Models"
+        search
+        selection
+        fluid
+        multiple
+        //allowAdditions
+        value={this.state.selected}
+        //onAddItem={this.handleAddition}
         onChange={this.handleChange}
       />
     );

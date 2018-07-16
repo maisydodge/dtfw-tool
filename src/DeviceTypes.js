@@ -48,7 +48,7 @@ class DeviceTypes extends React.Component {
         return response.json();
       })
       .then(result => {
-        //console.log(result)
+        console.log(result);
         this.setState({ devicetypes: result.data.documents });
       });
   }
@@ -63,7 +63,18 @@ class DeviceTypes extends React.Component {
     docs[0] = {};
 
     for (const prop in row) {
+      if (row[prop] === undefined) {
+        row[prop] = false;
+      }
+      if (row[prop] === "true") {
+        row[prop] = true;
+      }
       docs[0][prop] = row[prop];
+    }
+
+    //checks for duplicates (if id's are the same)
+    for (var i = 0; i < this.state.devicetypes.length; i++) {
+      if (row["_id"] === this.state.devicetypes[i]["_id"]) return;
     }
 
     fetch("https://34.229.145.29/devicetypes", {
@@ -318,7 +329,7 @@ class DeviceTypes extends React.Component {
             dataField="label"
             expandable={false}
             hidden
-            editable={{ type: "textarea", placeholder: "Enter Label" }}
+            editable={{ type: "textarea", validator: textValidator, placeholder: "Enter Label" }}
           >
             Label
           </TableHeaderColumn>

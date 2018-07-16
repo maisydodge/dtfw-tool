@@ -1,6 +1,7 @@
 import React from "react";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
-import { customID, customFWModel, customReleaseNotes, customPrereq } from "./modal/ModalUtils";
+import { customID, customReleaseNotes, customPrereq } from "./modal/ModalUtils";
+import FWModelField from "./modal/FWModelField";
 
 import {
   booleanCheck,
@@ -29,6 +30,7 @@ class FirmwareUpgrades extends React.Component {
     };
     this.onAddRow = this.onAddRow.bind(this);
     this.onAfterSaveCell = this.onAfterSaveCell;
+    this.customFWModel = this.customFWModel.bind(this);
   }
 
   componentWillMount() {
@@ -51,7 +53,7 @@ class FirmwareUpgrades extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    //console.log("Current: " + JSON.stringify(this.state.firmwareupgrades));
+    console.log("Current: " + JSON.stringify(this.state.firmwareupgrades));
   }
 
   /*-------------- Create -----------------*/
@@ -60,6 +62,12 @@ class FirmwareUpgrades extends React.Component {
     docs[0] = {};
 
     for (const prop in row) {
+      if (row[prop] === undefined || row[prop] === "false") {
+        row[prop] = false;
+      }
+      if (row[prop] === "true") {
+        row[prop] = true;
+      }
       docs[0][prop] = row[prop];
     }
 
@@ -134,6 +142,9 @@ class FirmwareUpgrades extends React.Component {
   //       });
   //   }
   // }
+  customFWModel(column, attr, editorClass, ignoreEditable, defaultValue) {
+    return <FWModelField data={this.state.firmwareupgrades} ref={attr.ref} />;
+  }
 
   render() {
     const options = {
@@ -222,7 +233,7 @@ class FirmwareUpgrades extends React.Component {
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="platform"
-            editable={{ type: "textarea", placeholder: "Enter Platform" }}
+            editable={{ type: "textarea", validator: textValidator, placeholder: "Enter Platform" }}
             tdStyle={{ whiteSpace: "normal" }}
           >
             Platform
@@ -252,7 +263,7 @@ class FirmwareUpgrades extends React.Component {
             editable={false}
             tdStyle={{ whiteSpace: "normal" }}
             dataFormat={formatModels}
-            customInsertEditor={{ getElement: customFWModel }}
+            customInsertEditor={{ getElement: this.customFWModel }}
           >
             Models
           </TableHeaderColumn>
@@ -269,7 +280,11 @@ class FirmwareUpgrades extends React.Component {
             dataField="deviceType"
             expandable={false}
             hidden
-            editable={{ type: "textarea", placeholder: "Enter Device Type" }}
+            editable={{
+              type: "textarea",
+              validator: textValidator,
+              placeholder: "Enter Device Type"
+            }}
             dataFormat={allCaps}
           >
             Device Type
@@ -278,17 +293,25 @@ class FirmwareUpgrades extends React.Component {
             dataField="filename"
             expandable={false}
             hidden
-            editable={{ type: "textarea", placeholder: "Enter File Name" }}
+            editable={{
+              type: "textarea",
+              validator: textValidator,
+              placeholder: "Enter File Name"
+            }}
           >
             File Name
           </TableHeaderColumn>
           <TableHeaderColumn
-            dataField="md5hash"
+            dataField="firmwareVersion"
             expandable={false}
             hidden
-            editable={{ type: "textarea", placeholder: "Enter MD5 Hash" }}
+            editable={{
+              type: "textarea",
+              validator: textValidator,
+              placeholder: "Enter Firmware Version"
+            }}
           >
-            MD5 Hash
+            Firmware Version
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="prerequisites"
@@ -296,12 +319,23 @@ class FirmwareUpgrades extends React.Component {
             hidden
             editable={{
               type: "textarea",
-              placeholder: "Enter Prerequisites (separated by newline)"
+              placeholder: "Enter Prerequisites"
             }}
             dataFormat={prereqFormatter}
             customInsertEditor={{ getElement: customPrereq }}
           >
             Prerequisites
+          </TableHeaderColumn>
+          <TableHeaderColumn
+            dataField="supported"
+            expandable={false}
+            hidden
+            editable={{
+              type: "checkbox",
+              options: { values: "true:false" }
+            }}
+          >
+            Supported
           </TableHeaderColumn>
         </BootstrapTable>
       </div>

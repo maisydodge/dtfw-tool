@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, TextArea } from "semantic-ui-react";
+import { Form, Input } from "semantic-ui-react";
 import { formatDate } from "../Utils";
 
 /**
@@ -8,37 +8,42 @@ import { formatDate } from "../Utils";
  */
 class Prerequisites extends React.Component {
   state = {
-    value: {
-      deviceType: "",
-      firmwareVersion: "",
-      releaseDate: ""
-    }
+    deviceType: "",
+    firmwareVersion: "",
+    releaseDate: ""
   };
 
-  handleChange = (e, { value }) => this.setState({ value: value });
+  handleChange = (e, { value }) => {
+    this.setState({ [e.target.name]: value });
+  };
 
   getFieldValue = () => {
-    return this.state.value;
+    var myarray = [];
+    myarray[0] = this.state;
+    return myarray;
   };
 
   render() {
     return (
       <Form>
-        <TextArea
+        <Input
           type="text"
-          value={this.state.value.deviceType}
+          value={this.state.deviceType}
+          name="deviceType"
           placeholder="Enter Device Type"
           onChange={this.handleChange}
         />
-        <TextArea
+        <Input
           type="text"
-          value={this.state.value.firmwareVersion}
+          name="firmwareVersion"
+          value={this.state.firmwareVersion}
           placeholder="Enter Firmware Version"
           onChange={this.handleChange}
         />
-        <TextArea
-          type="text"
-          value={formatDate(this.state.value.releaseDate)}
+        <Input
+          type="date"
+          name="releaseDate"
+          value={formatDate(this.state.releaseDate)}
           placeholder="Enter Release Date (YYYY-MM-DD)"
           onChange={this.handleChange}
         />

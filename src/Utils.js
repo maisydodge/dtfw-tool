@@ -18,12 +18,20 @@ export function cat_options(data) {
 export function brand_options(data) {
   return makeUnique(data.map(({ brandName }) => ({ value: brandName, text: brandName })));
 }
-// export const brand_options = makeUnique(
-//   dt_data.map(({ brandName }) => ({ value: brandName, text: brandName }))
-// );
 
 export function model_options(data) {
   return makeUnique(data.map(({ model }) => ({ value: model, text: model })));
+}
+
+export function fwmodel_options(data) {
+  var options = [];
+  for (var i = 0; i < data.length; i++) {
+    for (var j = 0; j < data[i].models.length; j++) {
+      options.push(data[i].models[j]);
+    }
+  }
+  options = makeUnique(options.map(model => ({ value: model, text: model })));
+  return options;
 }
 
 /*------------ Dropdown Populators ------------ */
@@ -132,6 +140,9 @@ export function formatModels(cell) {
  *         If received in YYYY/MM/DD, will store full ISO 8601 but display YYYY/MM/DD
  */
 export function formatDate(cell) {
+  if (cell === undefined) {
+    return cell;
+  }
   if (cell.includes("T00:00:00Z")) {
     return cell.slice(0, 10);
   } else {
@@ -174,17 +185,30 @@ export function HTML2text(cell) {
   return cell;
 }
 
+/**
+ * Summary: Formats the cell so device type property 'Type' and
+ *          firmware upgrade property 'Device Type' are capitalized
+ *    @param cell, the value of the cell
+ *    @return upper, the modified cell value
+ */
 export function allCaps(cell) {
   var upper = cell.toUpperCase();
-  //console.log(upper);
   return upper;
 }
 
+/**
+ * Summary: Formats the firmware upgrades attributes property to an object
+ *    @param cell, the value at the cell
+ *    @return myobject, cell formatted as an object
+ */
 export function attrFormatter(cell) {
   if (cell !== null && cell instanceof Object) {
     return cell;
   }
   var myobject = {};
+  if (cell === null) {
+    return myobject;
+  }
   var lines = cell.split("\n");
   for (var i = 0; i < lines.length; i++) {
     let current = lines[i].split(":");
@@ -194,19 +218,17 @@ export function attrFormatter(cell) {
   return myobject;
 }
 
+/**
+ * Summary: Formats the firmware upgrades prerequisites property to an array of an object
+ *    @param cell, the value at the cell
+ *    @return myarray, [{}]
+ */
 export function prereqFormatter(cell) {
   if (cell !== null && cell.constructor === Array) {
     return cell;
   }
   var myarray = [];
-  var myobject = {};
-  var lines = cell.split("\n");
-  for (var i = 0; i < lines.length; i++) {
-    let current = lines[i].split(":");
-    myobject[current[0]] = current[1];
-  }
-  myarray[0] = myobject;
-  //console.log("PREREQ: " + JSON.stringify(myarray));
+  myarray[0] = cell;
   return myarray;
 }
 
@@ -271,6 +293,10 @@ export function filterOptions(options) {
   return pairs;
 }
 
+/**
+ * Summary: Used by both device types and firmware upgrades to alert the user of a new row
+ *    @param row, the newly inserted row
+ */
 export function onAfterInsertRow(row) {
   let newRowStr = "";
 

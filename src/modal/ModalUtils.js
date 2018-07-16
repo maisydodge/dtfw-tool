@@ -1,6 +1,6 @@
 import React from "react";
 import IdField from "./IdField";
-import FWModelField from "./FWModelField";
+//import FWModelField from "./FWModelField";
 import ReleaseNotesField from "./ReleaseNotesField";
 import PrerequisitesField from "./PrerequisitesField";
 
@@ -8,9 +8,9 @@ export function customID(column, attr, editorClass, ignoreEditable, defaultValue
   return <IdField ref={attr.ref} editorClass={editorClass} ignoreEditable={ignoreEditable} />;
 }
 
-export function customFWModel(column, attr, editorClass, ignoreEditable, defaultValue) {
-  return <FWModelField ref={attr.ref} editorClass={editorClass} ignoreEditable={ignoreEditable} />;
-}
+// export function customFWModel(column, attr, editorClass, ignoreEditable, defaultValue) {
+//   return <FWModelField ref={attr.ref} editorClass={editorClass} ignoreEditable={ignoreEditable} />;
+// }
 
 export function customReleaseNotes(column, attr, editorClass, ignoreEditable, defaultValue) {
   return (

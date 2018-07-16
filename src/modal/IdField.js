@@ -26,6 +26,7 @@ class IdField extends React.Component {
           placeholder="Enter ID"
           fluid={true}
           onChange={this.handleChange}
+          disabled
         />
       </Form>
     );
