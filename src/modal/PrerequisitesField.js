@@ -6,7 +6,7 @@ import { formatDate } from "../Utils";
  * Summary: Class for the firmware upgrade prerequisites
  *    @return 3 text areas for the 3 prerequisites
  */
-class Prerequisites extends React.Component {
+class PrerequisitesField extends React.Component {
   state = {
     deviceType: "",
     firmwareVersion: "",
@@ -52,4 +52,4 @@ class Prerequisites extends React.Component {
   }
 }
 
-export default Prerequisites;
+export default PrerequisitesField;

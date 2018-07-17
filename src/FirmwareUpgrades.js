@@ -1,26 +1,11 @@
 import React from "react";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
-import { customID, customReleaseNotes, customPrereq } from "./modal/ModalUtils";
+import { customReleaseNotes, customPrereq, customFWAttr } from "./modal/ModalUtils";
 import FWModelField from "./modal/FWModelField";
 
-import {
-  booleanCheck,
-  formatModels,
-  formatDate,
-  HTML2text,
-  allCaps,
-  onAfterInsertRow,
-  attrFormatter,
-  prereqFormatter
-} from "./Utils";
+import { formatModels, formatDate, HTML2text, allCaps, onAfterInsertRow } from "./Utils";
 
-import {
-  selectValidator,
-  textValidator,
-  urlValidator,
-  fileSizeValidator,
-  tftpURLValidator
-} from "./Validators";
+import { selectValidator, textValidator, urlValidator, fileSizeValidator } from "./Validators";
 
 class FirmwareUpgrades extends React.Component {
   constructor() {
@@ -37,7 +22,7 @@ class FirmwareUpgrades extends React.Component {
     fetch("https://34.229.145.29/firmware", {
       method: "POST",
       headers: {
-        "Allow-Control-Allow-Origin": "*",
+        //"Allow-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
         Authorization: "Basic YWRtaW46dGhpc2lzYXN0cm9uZ3eec3N3b3Jk"
       },
@@ -53,7 +38,7 @@ class FirmwareUpgrades extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log("Current: " + JSON.stringify(this.state.firmwareupgrades));
+    //console.log("Current: " + JSON.stringify(this.state.firmwareupgrades));
   }
 
   /*-------------- Create -----------------*/
@@ -74,7 +59,7 @@ class FirmwareUpgrades extends React.Component {
     fetch("https://34.229.145.29/firmware", {
       method: "POST",
       headers: {
-        "Allow-Control-Allow-Origin": "*",
+        //"Allow-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
         Authorization: "Basic YWRtaW46dGhpc2lzYXN0cm9uZ3eec3N3b3Jk"
       },
@@ -91,6 +76,7 @@ class FirmwareUpgrades extends React.Component {
         console.log(result);
         this.state.firmwareupgrades.push(row);
         console.log("Length should be + 1: " + this.state.firmwareupgrades.length);
+        alert(result.message);
         this.setState({
           firmware: this.state.firmwareupgrades
         });
@@ -106,7 +92,7 @@ class FirmwareUpgrades extends React.Component {
     fetch("https://34.229.145.29/firmware", {
       method: "POST",
       headers: {
-        "Allow-Control-Allow-Origin": "*",
+        //"Allow-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
         Authorization: "Basic YWRtaW46dGhpc2lzYXN0cm9uZ3eec3N3b3Jk"
       },
@@ -121,6 +107,7 @@ class FirmwareUpgrades extends React.Component {
       })
       .then(result => {
         console.log(result);
+        alert(result.message);
       });
   }
 
@@ -185,7 +172,7 @@ class FirmwareUpgrades extends React.Component {
           search
           pagination
         >
-          <TableHeaderColumn
+          {/* <TableHeaderColumn
             dataField="_id"
             isKey={true}
             hidden
@@ -193,12 +180,13 @@ class FirmwareUpgrades extends React.Component {
             customInsertEditor={{ getElement: customID }}
           >
             ID
-          </TableHeaderColumn>
+          </TableHeaderColumn> */}
           <TableHeaderColumn
             dataField="url"
             editable={{ type: "textarea", validator: urlValidator, placeholder: "Enter URL" }}
             tdStyle={{ whiteSpace: "normal" }}
             width={"250"}
+            isKey={true}
           >
             URL
           </TableHeaderColumn>
@@ -238,7 +226,7 @@ class FirmwareUpgrades extends React.Component {
           >
             Platform
           </TableHeaderColumn>
-          <TableHeaderColumn
+          {/* <TableHeaderColumn
             dataField="tftpStatus"
             editable={{ type: "checkbox", options: { values: "true:false" } }}
             dataFormat={booleanCheck}
@@ -254,10 +242,10 @@ class FirmwareUpgrades extends React.Component {
               placeholder: "Enter TFTP URL"
             }}
             tdStyle={{ whiteSpace: "normal" }}
-            width={"250"}
+            width={"230"}
           >
             TFTP URL
-          </TableHeaderColumn>
+          </TableHeaderColumn> */}
           <TableHeaderColumn
             dataField="models"
             editable={false}
@@ -272,7 +260,8 @@ class FirmwareUpgrades extends React.Component {
             expandable={false}
             hidden
             editable={{ type: "textarea", placeholder: "Enter Attributes (separated by newline)" }}
-            dataFormat={attrFormatter}
+            //dataFormat={attrFormatter}
+            customInsertEditor={{ getElement: customFWAttr }}
           >
             Attributes
           </TableHeaderColumn>
@@ -321,7 +310,7 @@ class FirmwareUpgrades extends React.Component {
               type: "textarea",
               placeholder: "Enter Prerequisites"
             }}
-            dataFormat={prereqFormatter}
+            //dataFormat={prereqFormatter}
             customInsertEditor={{ getElement: customPrereq }}
           >
             Prerequisites

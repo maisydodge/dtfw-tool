@@ -2,10 +2,10 @@ import React from "react";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 
 import AttributesTable from "./AttributesTable";
-import { customID } from "./modal/ModalUtils";
 import CategoryField from "./modal/CategoryField";
 import BrandField from "./modal/BrandField";
 import ModelField from "./modal/ModelField";
+import { customAttr } from "./modal/ModalUtils";
 
 import {
   cat_options,
@@ -38,7 +38,7 @@ class DeviceTypes extends React.Component {
     fetch("https://34.229.145.29/devicetypes", {
       method: "POST",
       headers: {
-        "Allow-Control-Allow-Origin": "*",
+        //"Allow-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
         Authorization: "Basic YWRtaW46dGhpc2lzYXN0cm9uZ3eec3N3b3Jk"
       },
@@ -54,7 +54,7 @@ class DeviceTypes extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    //console.log("Current: " + JSON.stringify(this.state.devicetypes));
+    console.log("Current: " + JSON.stringify(this.state.devicetypes));
   }
 
   /*-------------- Create -----------------*/
@@ -72,6 +72,14 @@ class DeviceTypes extends React.Component {
       docs[0][prop] = row[prop];
     }
 
+    docs[0].type = allCaps(row.attributes.type);
+    docs[0].label = row.attributes.label;
+    docs[0].ovrcPro = row.attributes.ovrcPro;
+    docs[0].ovrcHome = row.attributes.ovrcHome;
+    docs[0].logTimeSeries = row.attributes.logTimeSeries;
+
+    console.log(docs[0]);
+
     //checks for duplicates (if id's are the same)
     for (var i = 0; i < this.state.devicetypes.length; i++) {
       if (row["_id"] === this.state.devicetypes[i]["_id"]) return;
@@ -80,7 +88,7 @@ class DeviceTypes extends React.Component {
     fetch("https://34.229.145.29/devicetypes", {
       method: "POST",
       headers: {
-        "Allow-Control-Allow-Origin": "*",
+        //"Allow-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
         Authorization: "Basic YWRtaW46dGhpc2lzYXN0cm9uZ3eec3N3b3Jk"
       },
@@ -97,6 +105,7 @@ class DeviceTypes extends React.Component {
         console.log(result);
         this.state.devicetypes.push(row);
         console.log("Length should be + 1: " + this.state.devicetypes.length);
+        alert(result.message);
         this.setState({
           devicetypes: this.state.devicetypes
         });
@@ -120,7 +129,7 @@ class DeviceTypes extends React.Component {
     fetch("https://34.229.145.29/devicetypes", {
       method: "POST",
       headers: {
-        "Allow-Control-Allow-Origin": "*",
+        //"Allow-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
         Authorization: "Basic YWRtaW46dGhpc2lzYXN0cm9uZ3eec3N3b3Jk"
       },
@@ -135,6 +144,7 @@ class DeviceTypes extends React.Component {
       })
       .then(result => {
         console.log(result);
+        alert(result.message);
       });
   }
 
@@ -234,7 +244,7 @@ class DeviceTypes extends React.Component {
           keyBoardNav={keyBoardNav}
           hover
         >
-          <TableHeaderColumn
+          {/* <TableHeaderColumn
             dataField="_id"
             isKey={true}
             hidden
@@ -242,7 +252,7 @@ class DeviceTypes extends React.Component {
             customInsertEditor={{ getElement: customID }}
           >
             ID
-          </TableHeaderColumn>
+          </TableHeaderColumn> */}
           <TableHeaderColumn
             dataField="category"
             expandable={false}
@@ -277,6 +287,7 @@ class DeviceTypes extends React.Component {
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="model"
+            isKey={true}
             expandable={false}
             editable={{
               type: "select",
@@ -316,7 +327,7 @@ class DeviceTypes extends React.Component {
           >
             Supported
           </TableHeaderColumn>
-          <TableHeaderColumn
+          {/* <TableHeaderColumn
             dataField="type"
             expandable={false}
             hidden
@@ -332,72 +343,15 @@ class DeviceTypes extends React.Component {
             editable={{ type: "textarea", validator: textValidator, placeholder: "Enter Label" }}
           >
             Label
-          </TableHeaderColumn>
+          </TableHeaderColumn> */}
           <TableHeaderColumn
-            dataField="webconnect"
+            dataField="attributes"
             expandable={false}
             hidden
-            editable={{
-              type: "checkbox",
-              options: [{ value: true, text: "true" }, { value: false, text: "false" }]
-            }}
+            editable={false}
+            customInsertEditor={{ getElement: customAttr }}
           >
-            WebConnect
-          </TableHeaderColumn>
-          <TableHeaderColumn
-            dataField="ovrcHome"
-            expandable={false}
-            hidden
-            editable={{
-              type: "checkbox",
-              options: [{ value: true, text: "true" }, { value: false, text: "false" }]
-            }}
-          >
-            Ovrc Home
-          </TableHeaderColumn>
-          <TableHeaderColumn
-            dataField="ovrcPro"
-            expandable={false}
-            hidden
-            editable={{
-              type: "checkbox",
-              options: [{ value: true, text: "true" }, { value: false, text: "false" }]
-            }}
-          >
-            Ovrc Pro
-          </TableHeaderColumn>
-          <TableHeaderColumn
-            dataField="logTimeSeries"
-            expandable={false}
-            hidden
-            editable={{
-              type: "checkbox",
-              options: [{ value: true, text: "true" }, { value: false, text: "false" }]
-            }}
-          >
-            Log Time Series
-          </TableHeaderColumn>
-          <TableHeaderColumn
-            dataField="parentalControls"
-            expandable={false}
-            hidden
-            editable={{
-              type: "checkbox",
-              options: [{ value: true, text: "true" }, { value: false, text: "false" }]
-            }}
-          >
-            Parental Controls
-          </TableHeaderColumn>
-          <TableHeaderColumn
-            dataField="sshtunnel"
-            expandable={false}
-            hidden
-            editable={{
-              type: "checkbox",
-              options: [{ value: true, text: "true" }, { value: false, text: "false" }]
-            }}
-          >
-            SSH Tunnel
+            Attributes
           </TableHeaderColumn>
         </BootstrapTable>
       </div>

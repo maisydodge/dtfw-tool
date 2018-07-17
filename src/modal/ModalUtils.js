@@ -3,6 +3,9 @@ import IdField from "./IdField";
 //import FWModelField from "./FWModelField";
 import ReleaseNotesField from "./ReleaseNotesField";
 import PrerequisitesField from "./PrerequisitesField";
+import FWAttributesField from "./FWAttributesField";
+import AttributesField from "./AttributesField";
+import SSHTunnelField from "./SSHTunnelField";
 
 export function customID(column, attr, editorClass, ignoreEditable, defaultValue) {
   return <IdField ref={attr.ref} editorClass={editorClass} ignoreEditable={ignoreEditable} />;
@@ -21,6 +24,24 @@ export function customReleaseNotes(column, attr, editorClass, ignoreEditable, de
 export function customPrereq(column, attr, editorClass, ignoreEditable, defaultValue) {
   return (
     <PrerequisitesField ref={attr.ref} editorClass={editorClass} ignoreEditable={ignoreEditable} />
+  );
+}
+
+export function customAttr(column, attr, editorClass, ignoreEditable, defaultValue) {
+  return (
+    <AttributesField ref={attr.ref} editorClass={editorClass} ignoreEditable={ignoreEditable} />
+  );
+}
+
+export function customFWAttr(column, attr, editorClass, ignoreEditable, defaultValue) {
+  return (
+    <FWAttributesField ref={attr.ref} editorClass={editorClass} ignoreEditable={ignoreEditable} />
+  );
+}
+
+export function customSSH(column, attr, editorClass, ignoreEditable, defaultValue) {
+  return (
+    <SSHTunnelField ref={attr.ref} editorClass={editorClass} ignoreEditable={ignoreEditable} />
   );
 }
 

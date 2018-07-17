@@ -201,36 +201,36 @@ export function allCaps(cell) {
  *    @param cell, the value at the cell
  *    @return myobject, cell formatted as an object
  */
-export function attrFormatter(cell) {
-  if (cell !== null && cell instanceof Object) {
-    return cell;
-  }
-  var myobject = {};
-  if (cell === null) {
-    return myobject;
-  }
-  var lines = cell.split("\n");
-  for (var i = 0; i < lines.length; i++) {
-    let current = lines[i].split(":");
-    myobject[current[0]] = current[1];
-  }
-  //console.log("ATTR:" + JSON.stringify(myobject));
-  return myobject;
-}
+// export function attrFormatter(cell) {
+//   if (cell !== null && cell instanceof Object) {
+//     return cell;
+//   }
+//   var myobject = {};
+//   if (cell === null) {
+//     return myobject;
+//   }
+//   var lines = cell.split("\n");
+//   for (var i = 0; i < lines.length; i++) {
+//     let current = lines[i].split(":");
+//     myobject[current[0]] = current[1];
+//   }
+//   console.log(myobject);
+//   return myobject;
+// }
 
 /**
  * Summary: Formats the firmware upgrades prerequisites property to an array of an object
  *    @param cell, the value at the cell
  *    @return myarray, [{}]
  */
-export function prereqFormatter(cell) {
-  if (cell !== null && cell.constructor === Array) {
-    return cell;
-  }
-  var myarray = [];
-  myarray[0] = cell;
-  return myarray;
-}
+// export function prereqFormatter(cell) {
+//   if (cell !== null && cell.constructor === Array) {
+//     return cell;
+//   }
+//   var myarray = [];
+//   myarray[0] = cell;
+//   return myarray;
+// }
 
 /*------------ Misc ------------ */
 
