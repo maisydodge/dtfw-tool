@@ -5,7 +5,6 @@ import ReleaseNotesField from "./ReleaseNotesField";
 import PrerequisitesField from "./PrerequisitesField";
 import FWAttributesField from "./FWAttributesField";
 import AttributesField from "./AttributesField";
-import SSHTunnelField from "./SSHTunnelField";
 
 export function customID(column, attr, editorClass, ignoreEditable, defaultValue) {
   return <IdField ref={attr.ref} editorClass={editorClass} ignoreEditable={ignoreEditable} />;
@@ -36,12 +35,6 @@ export function customAttr(column, attr, editorClass, ignoreEditable, defaultVal
 export function customFWAttr(column, attr, editorClass, ignoreEditable, defaultValue) {
   return (
     <FWAttributesField ref={attr.ref} editorClass={editorClass} ignoreEditable={ignoreEditable} />
-  );
-}
-
-export function customSSH(column, attr, editorClass, ignoreEditable, defaultValue) {
-  return (
-    <SSHTunnelField ref={attr.ref} editorClass={editorClass} ignoreEditable={ignoreEditable} />
   );
 }
 

@@ -1,7 +1,6 @@
 import React from "react";
-import { Form, Input } from "semantic-ui-react";
+import { Form, Input, Checkbox } from "semantic-ui-react";
 import { allCaps } from "../Utils";
-import SSHTunnelField from "./SSHTunnelField";
 
 /**
  * Summary: Class for the firmware upgrade prerequisites
@@ -9,99 +8,222 @@ import SSHTunnelField from "./SSHTunnelField";
  */
 class AttributesField extends React.Component {
   state = {
-    type: "",
-    label: "",
     webconnect: false,
     ovrcHome: false,
     ovrcPro: false,
     logTimeSeries: false,
     parentalControls: false,
+    hasWireless: false,
     sshtunnel: {
-      //   supports: false,
-      //   port: null,
-      //   protocol: ""
+      supports: false,
+      port: 80,
+      protocol: "HTTP"
     }
   };
 
   handleChange = e => {
-    const value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+    var value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+    // if (e.target.name === "type") {
+    //   value = allCaps(value);
+    // }
     this.setState({ [e.target.name]: value });
   };
 
+  handleChangeSSH = e => {
+    const value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+    var sshtunnel = { ...this.state.sshtunnel };
+    sshtunnel[e.target.name] = value;
+    this.setState({ sshtunnel });
+  };
+
   getFieldValue = () => {
-    console.log(this.state);
+    console.log(JSON.stringify(this.state));
     return this.state;
   };
 
   render() {
     return (
-      <Form>
-        <Input
-          type="text"
-          value={allCaps(this.state.type)}
-          name="type"
-          placeholder="Enter Type"
-          onChange={this.handleChange}
-        />{" "}
+      // <Form>
+      //   <Checkbox
+      //     type="checkbox"
+      //     name="webconnect"
+      //     defaultChecked={this.state.webconnect}
+      //     label="WebConnect"
+      //     onChange={this.handleChange}
+      //   />
+      //   <br />
+      //   <Checkbox
+      //     type="checkbox"
+      //     name="ovrcHome"
+      //     defaultChecked={this.state.ovrcHome}
+      //     label="OvrC Home"
+      //     onChange={this.handleChange}
+      //   />{" "}
+      //   <br />
+      //   <Checkbox
+      //     type="checkbox"
+      //     name="ovrcPro"
+      //     defaultChecked={this.state.ovrcPro}
+      //     label="OvrC Pro"
+      //     onChange={this.handleChange}
+      //   />{" "}
+      //   <br />
+      //   <Checkbox
+      //     type="checkbox"
+      //     name="logTimeSeries"
+      //     defaultChecked={this.state.logTimeSeries}
+      //     label="Log Time Series"
+      //     onChange={this.handleChange}
+      //   />{" "}
+      //   <br />
+      //   <Checkbox
+      //     type="checkbox"
+      //     name="parentalControls"
+      //     defaultChecked={this.state.parentalControls}
+      //     label="Parental Controls"
+      //     onChange={this.handleChange}
+      //   />{" "}
+      //   <br />
+      //   <Checkbox
+      //     type="checkbox"
+      //     name="hasWireless"
+      //     defaultChecked={this.state.hasWireless}
+      //     label="hasWireless"
+      //     onChange={this.handleChange}
+      //   />{" "}
+      //   <br />
+      //   <Checkbox
+      //     type="checkbox"
+      //     name="supports"
+      //     defaultChecked={this.state.sshtunnel.supports}
+      //     label="SSH Tunnel: Supports"
+      //     onChange={this.handleChangeSSH}
+      //   />{" "}
+      //   <br />
+      //   <div>
+      //     SSH Tunnel: Port
+      //     <Input
+      //       type="number"
+      //       name="port"
+      //       value={this.state.sshtunnel.port}
+      //       placeholder="SSH Tunnel: Port"
+      //       onChange={this.handleChangeSSH}
+      //     />
+      //   </div>
+      //   <br />
+      //   <div>
+      //     SSH Tunnel: Protocol
+      //     <Input
+      //       type="text"
+      //       name="protocol"
+      //       value={this.state.sshtunnel.protocol}
+      //       placeholder="SSH Tunnel: Protocol"
+      //       onChange={this.handleChangeSSH}
+      //     />
+      //   </div>
+      //   <br />
+      // </Form>
+      <form>
+        <div>
+          WebConnect &nbsp;
+          <input
+            type="checkbox"
+            name="webconnect"
+            value={this.state.webconnect}
+            label="WebConnect"
+            onChange={this.handleChange}
+          />
+          <br />{" "}
+        </div>
+        <div>
+          OvrC Home &nbsp;
+          <input
+            type="checkbox"
+            name="ovrcHome"
+            value={this.state.ovrcHome}
+            label="OvrC Home"
+            onChange={this.handleChange}
+          />{" "}
+          <br />{" "}
+        </div>
+        <div>
+          OvrC Pro &nbsp;
+          <input
+            type="checkbox"
+            name="ovrcPro"
+            value={this.state.ovrcPro}
+            label="OvrC Pro"
+            onChange={this.handleChange}
+          />{" "}
+          <br />
+        </div>
+        <div>
+          Log Time Series &nbsp;
+          <input
+            type="checkbox"
+            name="logTimeSeries"
+            checked={this.state.logTimeSeries}
+            label="Log Time Series"
+            onChange={this.handleChange}
+          />{" "}
+          <br />
+        </div>
+        <div>
+          Parental Controls &nbsp;
+          <input
+            type="checkbox"
+            name="parentalControls"
+            checked={this.state.parentalControls}
+            label="Parental Controls"
+            onChange={this.handleChange}
+          />{" "}
+          <br />
+        </div>
+        <div>
+          Has Wireless &nbsp;
+          <input
+            type="checkbox"
+            name="hasWireless"
+            checked={this.state.hasWireless}
+            label="hasWireless"
+            onChange={this.handleChange}
+          />{" "}
+          <br />
+        </div>
+        <div>
+          SSH Tunnel: Supports &nbsp;
+          <input
+            type="checkbox"
+            name="supports"
+            checked={this.state.sshtunnel.supports}
+            label="SSH Tunnel: Supports"
+            onChange={this.handleChangeSSH}
+          />{" "}
+          <br />
+        </div>
+        <div>
+          SSH Tunnel: Port &nbsp;
+          <input
+            type="number"
+            name="port"
+            value={this.state.sshtunnel.port}
+            placeholder="SSH Tunnel: Port"
+            onChange={this.handleChangeSSH}
+          />
+        </div>
         <br />
-        <Input
-          type="text"
-          name="label"
-          value={this.state.label}
-          placeholder="Enter label"
-          onChange={this.handleChange}
-        />{" "}
+        <div>
+          SSH Tunnel: Protocol &nbsp;
+          <input
+            type="text"
+            name="protocol"
+            value={this.state.sshtunnel.protocol}
+            placeholder="SSH Tunnel: Protocol"
+            onChange={this.handleChangeSSH}
+          />
+        </div>
         <br />
-        <Input
-          type="checkbox"
-          name="webconnect"
-          checked={this.state.webconnect}
-          label="WebConnect"
-          onChange={this.handleChange}
-        />{" "}
-        <br />
-        <Input
-          type="checkbox"
-          name="ovrcHome"
-          checked={this.state.ovrcHome}
-          label="OvrC Home"
-          onChange={this.handleChange}
-        />{" "}
-        <br />
-        <Input
-          type="checkbox"
-          name="ovrcPro"
-          checked={this.state.ovrcPro}
-          label="OvrC Pro"
-          onChange={this.handleChange}
-        />{" "}
-        <br />
-        <Input
-          type="checkbox"
-          name="logTimeSeries"
-          checked={this.state.logTimeSeries}
-          label="Log Time Series"
-          onChange={this.handleChange}
-        />{" "}
-        <br />
-        <Input
-          type="checkbox"
-          name="parentalControls"
-          checked={this.state.parentalControls}
-          label="Parental Controls"
-          onChange={this.handleChange}
-        />{" "}
-        <br />
-        <Input
-          type="checkbox"
-          name="hasWireless"
-          checked={this.state.hasWirelness}
-          label="hasWireless"
-          onChange={this.handleChange}
-        />{" "}
-        <br />
-        <SSHTunnelField /> <br />
-      </Form>
+      </form>
     );
   }
 }

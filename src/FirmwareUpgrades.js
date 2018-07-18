@@ -3,9 +3,9 @@ import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import { customReleaseNotes, customPrereq, customFWAttr } from "./modal/ModalUtils";
 import FWModelField from "./modal/FWModelField";
 
-import { formatModels, formatDate, HTML2text, allCaps, onAfterInsertRow } from "./Utils";
+import { formatModels, formatDate, HTML2text, allCaps, onAfterInsertRow, text2HTML } from "./Utils";
 
-import { selectValidator, textValidator, urlValidator, fileSizeValidator } from "./Validators";
+import { selectValidator, textValidator, fileSizeValidator } from "./Validators";
 
 class FirmwareUpgrades extends React.Component {
   constructor() {
@@ -23,8 +23,7 @@ class FirmwareUpgrades extends React.Component {
       method: "POST",
       headers: {
         //"Allow-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-        Authorization: "Basic YWRtaW46dGhpc2lzYXN0cm9uZ3eec3N3b3Jk"
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({ action: "Read" })
     })
@@ -47,12 +46,9 @@ class FirmwareUpgrades extends React.Component {
     docs[0] = {};
 
     for (const prop in row) {
-      if (row[prop] === undefined || row[prop] === "false") {
+      if (row["supported"] === undefined || row["supported"] === "false") {
         row[prop] = false;
-      }
-      if (row[prop] === "true") {
-        row[prop] = true;
-      }
+      } else row["supported"] = true;
       docs[0][prop] = row[prop];
     }
 
@@ -60,8 +56,7 @@ class FirmwareUpgrades extends React.Component {
       method: "POST",
       headers: {
         //"Allow-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-        Authorization: "Basic YWRtaW46dGhpc2lzYXN0cm9uZ3eec3N3b3Jk"
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         action: "Create",
@@ -85,7 +80,13 @@ class FirmwareUpgrades extends React.Component {
 
   /*-------------- Update -----------------*/
   onAfterSaveCell(row, cellName, cellValue) {
+    if (cellName === "releaseNotes") {
+      cellValue = text2HTML(cellValue);
+      console.log(cellValue);
+    }
+
     alert(`Save cell ${cellName} with value ${cellValue}`);
+
     let props = {};
     props[cellName] = cellValue;
 
@@ -93,8 +94,7 @@ class FirmwareUpgrades extends React.Component {
       method: "POST",
       headers: {
         //"Allow-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-        Authorization: "Basic YWRtaW46dGhpc2lzYXN0cm9uZ3eec3N3b3Jk"
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         action: "Update",
@@ -112,23 +112,33 @@ class FirmwareUpgrades extends React.Component {
   }
 
   /*-------------- Delete -----------------*/
-  // onAfterDeleteRow(rowKeys) {
-  //   if (window.confirm("Are you sure you want to delete the following firmware upgrade(s) " + rowKeys)){
-  //     fetch("https://34.229.145.29/firmware", {
-  //       method: "POST",
-  //       headers: { "Allow-Control-Allow-Origin": "*", "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         action: "Delete",
-  //       })
-  //     })
-  //       .then(response => {
-  //         return response.json();
-  //       })
-  //       .then(result => {
-  //         console.log(result);
-  //       });
-  //   }
-  // }
+  onAfterDeleteRow(rowKeys) {
+    let deleted = [];
+
+    for (var i = 0; i < rowKeys.length; i++) {
+      deleted.push(rowKeys[i]);
+    }
+
+    if (
+      window.confirm("Are you sure you want to delete the following firmware upgrade(s) " + rowKeys)
+    ) {
+      fetch("https://34.229.145.29/firmware", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "Delete",
+          ids: deleted
+        })
+      })
+        .then(response => {
+          return response.json();
+        })
+        .then(result => {
+          console.log(result);
+        });
+    }
+  }
+
   customFWModel(column, attr, editorClass, ignoreEditable, defaultValue) {
     return <FWModelField data={this.state.firmwareupgrades} ref={attr.ref} />;
   }
@@ -172,21 +182,15 @@ class FirmwareUpgrades extends React.Component {
           search
           pagination
         >
-          {/* <TableHeaderColumn
-            dataField="_id"
-            isKey={true}
-            hidden
-            editable={true}
-            customInsertEditor={{ getElement: customID }}
-          >
-            ID
-          </TableHeaderColumn> */}
           <TableHeaderColumn
             dataField="url"
-            editable={{ type: "textarea", validator: urlValidator, placeholder: "Enter URL" }}
+            editable={{
+              type: "textarea",
+              //validator: urlValidator,
+              placeholder: "Enter URL"
+            }}
             tdStyle={{ whiteSpace: "normal" }}
             width={"250"}
-            isKey={true}
           >
             URL
           </TableHeaderColumn>
@@ -212,7 +216,7 @@ class FirmwareUpgrades extends React.Component {
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="releaseNotes"
-            editable={{ type: "textarea", validator: textValidator }}
+            editable={{ type: "textarea" }}
             tdStyle={{ whiteSpace: "normal" }}
             dataFormat={HTML2text}
             customInsertEditor={{ getElement: customReleaseNotes }}
@@ -221,7 +225,7 @@ class FirmwareUpgrades extends React.Component {
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="platform"
-            editable={{ type: "textarea", validator: textValidator, placeholder: "Enter Platform" }}
+            editable={{ type: "textarea", placeholder: "Enter Platform" }}
             tdStyle={{ whiteSpace: "normal" }}
           >
             Platform
@@ -299,6 +303,7 @@ class FirmwareUpgrades extends React.Component {
               validator: textValidator,
               placeholder: "Enter Firmware Version"
             }}
+            isKey={true}
           >
             Firmware Version
           </TableHeaderColumn>

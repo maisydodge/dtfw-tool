@@ -105,7 +105,8 @@ export function booleanCheck(cell) {
  *    @return "Not supported" if undefined or the values of the ssh tunnel properties
  */
 export function displaySSH(cell) {
-  if (cell === undefined || cell["supports"] === undefined) return "Not supported";
+  if (cell === undefined || cell["supports"] === undefined || cell["supports"] === false)
+    return "Not supported";
   return (
     "Supports: " +
     cell["supports"] +
@@ -242,9 +243,15 @@ export function allCaps(cell) {
  */
 export function applyDefaults(data, defaultAttributes) {
   for (var i = 0; i < data.length; i++) {
-    if (data[i].attributes === undefined) {
-      data[i].attributes = [];
-    }
+    // if (data[i].attributes === undefined) {
+    //   data[i].attributes = [];
+    // }
+
+    fillAttributes(data[i], "type");
+    fillAttributes(data[i], "label");
+    fillAttributes(data[i], "ovrcPro");
+    fillAttributes(data[i], "ovrcHome");
+    fillAttributes(data[i], "logTimeSeries");
     let new_attrs = [];
     new_attrs.push(data[i].attributes);
     let attributes = new_attrs;
@@ -254,11 +261,15 @@ export function applyDefaults(data, defaultAttributes) {
         attributes[0][key] = defaultAttributes[key];
       }
     }
-    attributes[0].type = data[i].type; // add type to attributes to display in expandable
-    attributes[0].label = data[i].label; // add label to attributes to display in expandable
     data[i].attributes = attributes;
   }
   return data;
+}
+
+export function fillAttributes(dataRow, prop) {
+  if (dataRow.attributes[prop] === undefined && dataRow[prop] !== undefined) {
+    dataRow.attributes[prop] = dataRow[prop];
+  }
 }
 
 /**

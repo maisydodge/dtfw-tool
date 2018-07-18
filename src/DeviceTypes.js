@@ -39,8 +39,7 @@ class DeviceTypes extends React.Component {
       method: "POST",
       headers: {
         //"Allow-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-        Authorization: "Basic YWRtaW46dGhpc2lzYXN0cm9uZ3eec3N3b3Jk"
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({ action: "Read" })
     })
@@ -71,14 +70,16 @@ class DeviceTypes extends React.Component {
       }
       docs[0][prop] = row[prop];
     }
-
-    docs[0].type = allCaps(row.attributes.type);
-    docs[0].label = row.attributes.label;
+    docs[0].attributes = row.attributes;
+    row.attributes.type = docs[0].type;
+    row.attributes.label = docs[0].label;
+    //docs[0].type = allCaps(row.attributes.type);
+    //docs[0].label = row.attributes.label;
     docs[0].ovrcPro = row.attributes.ovrcPro;
     docs[0].ovrcHome = row.attributes.ovrcHome;
     docs[0].logTimeSeries = row.attributes.logTimeSeries;
 
-    console.log(docs[0]);
+    console.log(JSON.stringify(docs));
 
     //checks for duplicates (if id's are the same)
     for (var i = 0; i < this.state.devicetypes.length; i++) {
@@ -89,8 +90,7 @@ class DeviceTypes extends React.Component {
       method: "POST",
       headers: {
         //"Allow-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-        Authorization: "Basic YWRtaW46dGhpc2lzYXN0cm9uZ3eec3N3b3Jk"
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         action: "Create",
@@ -130,8 +130,7 @@ class DeviceTypes extends React.Component {
       method: "POST",
       headers: {
         //"Allow-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-        Authorization: "Basic YWRtaW46dGhpc2lzYXN0cm9uZ3eec3N3b3Jk"
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         action: "Update",
@@ -149,23 +148,35 @@ class DeviceTypes extends React.Component {
   }
 
   /*-------------- Delete -----------------*/
-  // onAfterDeleteRow(rowKeys) {
-  //   if (window.confirm("Are you sure you want to delete the following firmware upgrade(s) " + rowKeys)){
-  //     fetch("https://34.229.145.29/firmware", {
-  //       method: "POST",
-  //       headers: { "Allow-Control-Allow-Origin": "*", "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         action: "Delete",
-  //       })
-  //     })
-  //       .then(response => {
-  //         return response.json();
-  //       })
-  //       .then(result => {
-  //         console.log(result);
-  //       });
-  //   }
-  // }
+  onAfterDeleteRow(rowKeys) {
+    let deleted = [];
+
+    //this is wrong, fix later! need ["_id"]
+    for (var i = 0; i < rowKeys.length; i++) {
+      deleted.push(rowKeys[i]);
+    }
+
+    if (
+      window.confirm("Are you sure you want to delete the following device types(s) " + rowKeys)
+    ) {
+      fetch("https://34.229.145.29/devicetypes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          action: "Delete",
+          ids: deleted
+        })
+      })
+        .then(response => {
+          return response.json();
+        })
+        .then(result => {
+          console.log(result);
+        });
+    }
+  }
 
   /*----------- Insert Modal Fields ---------------*/
   customCategory(column, attr, editorClass, ignoreEditable, defaultValue) {
@@ -199,7 +210,8 @@ class DeviceTypes extends React.Component {
       expandRowBgColor: "#aa66cc",
       expandBy: "column",
       afterInsertRow: onAfterInsertRow,
-      onAddRow: this.onAddRow
+      onAddRow: this.onAddRow,
+      searchDelayTime: 1000
       //afterDeleteRow: onAfterDeleteRow
     };
     const keyBoardNav = {
@@ -224,6 +236,7 @@ class DeviceTypes extends React.Component {
         </center>
         <BootstrapTable
           ref="table"
+          //data={applyDefaults(this.state.devicetypes, defaultAttributes)}
           data={applyDefaults(this.state.devicetypes, defaultAttributes)}
           cellEdit={cellEditProp}
           insertRow={true}
@@ -244,15 +257,6 @@ class DeviceTypes extends React.Component {
           keyBoardNav={keyBoardNav}
           hover
         >
-          {/* <TableHeaderColumn
-            dataField="_id"
-            isKey={true}
-            hidden
-            editable={true}
-            customInsertEditor={{ getElement: customID }}
-          >
-            ID
-          </TableHeaderColumn> */}
           <TableHeaderColumn
             dataField="category"
             expandable={false}
@@ -287,7 +291,6 @@ class DeviceTypes extends React.Component {
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="model"
-            isKey={true}
             expandable={false}
             editable={{
               type: "select",
@@ -295,6 +298,7 @@ class DeviceTypes extends React.Component {
               validator: selectValidator
             }}
             customInsertEditor={{ getElement: this.customModel }}
+            isKey={true}
           >
             Model
           </TableHeaderColumn>
@@ -327,7 +331,7 @@ class DeviceTypes extends React.Component {
           >
             Supported
           </TableHeaderColumn>
-          {/* <TableHeaderColumn
+          <TableHeaderColumn
             dataField="type"
             expandable={false}
             hidden
@@ -343,7 +347,7 @@ class DeviceTypes extends React.Component {
             editable={{ type: "textarea", validator: textValidator, placeholder: "Enter Label" }}
           >
             Label
-          </TableHeaderColumn> */}
+          </TableHeaderColumn>
           <TableHeaderColumn
             dataField="attributes"
             expandable={false}
