@@ -344,15 +344,6 @@ class DeviceTypes extends React.Component {
             Label
           </TableHeaderColumn>
           <TableHeaderColumn
-            dataField="attributes"
-            expandable={false}
-            hidden
-            editable={false}
-            customInsertEditor={{ getElement: customAttr }}
-          >
-            Attributes
-          </TableHeaderColumn>
-          <TableHeaderColumn
             dataField="ovrcPro"
             expandable={false}
             hidden
@@ -384,6 +375,15 @@ class DeviceTypes extends React.Component {
             }}
           >
             Log Time Series
+          </TableHeaderColumn>
+          <TableHeaderColumn
+            dataField="attributes"
+            expandable={false}
+            hidden
+            editable={false}
+            customInsertEditor={{ getElement: customAttr }}
+          >
+            Attributes
           </TableHeaderColumn>
         </BootstrapTable>
       </div>
