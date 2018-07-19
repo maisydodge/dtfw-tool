@@ -53,7 +53,7 @@ class DeviceTypes extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log("Current: " + JSON.stringify(this.state.devicetypes));
+    //console.log("Current: " + JSON.stringify(this.state.devicetypes));
   }
 
   /*-------------- Create -----------------*/
@@ -62,7 +62,7 @@ class DeviceTypes extends React.Component {
     docs[0] = {};
 
     for (const prop in row) {
-      if (row[prop] === undefined) {
+      if (row[prop] === undefined || row[prop] === "false") {
         row[prop] = false;
       }
       if (row[prop] === "true") {
@@ -71,13 +71,6 @@ class DeviceTypes extends React.Component {
       docs[0][prop] = row[prop];
     }
     docs[0].attributes = row.attributes;
-    row.attributes.type = docs[0].type;
-    row.attributes.label = docs[0].label;
-    //docs[0].type = allCaps(row.attributes.type);
-    //docs[0].label = row.attributes.label;
-    docs[0].ovrcPro = row.attributes.ovrcPro;
-    docs[0].ovrcHome = row.attributes.ovrcHome;
-    docs[0].logTimeSeries = row.attributes.logTimeSeries;
 
     console.log(JSON.stringify(docs));
 
@@ -94,7 +87,6 @@ class DeviceTypes extends React.Component {
       },
       body: JSON.stringify({
         action: "Create",
-        parent: "",
         documents: docs
       })
     })
@@ -110,6 +102,8 @@ class DeviceTypes extends React.Component {
           devicetypes: this.state.devicetypes
         });
       });
+    row.attributes.type = docs[0].type;
+    row.attributes.label = docs[0].label;
   }
 
   /*-------------- Update -----------------*/
@@ -148,16 +142,17 @@ class DeviceTypes extends React.Component {
   }
 
   /*-------------- Delete -----------------*/
-  onAfterDeleteRow(rowKeys) {
-    let deleted = [];
+  onDeleteRow(rows, fullrows) {
+    var deleted = [];
+    console.log(fullrows);
 
     //this is wrong, fix later! need ["_id"]
-    for (var i = 0; i < rowKeys.length; i++) {
-      deleted.push(rowKeys[i]);
+    for (var i = 0; i < fullrows.length; i++) {
+      deleted.push(fullrows[i]["_id"]);
     }
 
     if (
-      window.confirm("Are you sure you want to delete the following device types(s) " + rowKeys)
+      window.confirm("Are you sure you want to delete the following device types(s) " + deleted)
     ) {
       fetch("https://34.229.145.29/devicetypes", {
         method: "POST",
@@ -211,8 +206,8 @@ class DeviceTypes extends React.Component {
       expandBy: "column",
       afterInsertRow: onAfterInsertRow,
       onAddRow: this.onAddRow,
-      searchDelayTime: 1000
-      //afterDeleteRow: onAfterDeleteRow
+      searchDelayTime: 1000,
+      onDeleteRow: this.onDeleteRow
     };
     const keyBoardNav = {
       enterToEdit: true
@@ -356,6 +351,39 @@ class DeviceTypes extends React.Component {
             customInsertEditor={{ getElement: customAttr }}
           >
             Attributes
+          </TableHeaderColumn>
+          <TableHeaderColumn
+            dataField="ovrcPro"
+            expandable={false}
+            hidden
+            editable={{
+              type: "checkbox",
+              options: { values: "true:false" }
+            }}
+          >
+            OvrC Pro
+          </TableHeaderColumn>
+          <TableHeaderColumn
+            dataField="ovrcHome"
+            expandable={false}
+            hidden
+            editable={{
+              type: "checkbox",
+              options: { values: "true:false" }
+            }}
+          >
+            OvrC Home
+          </TableHeaderColumn>
+          <TableHeaderColumn
+            dataField="logTimeSeries"
+            expandable={false}
+            hidden
+            editable={{
+              type: "checkbox",
+              options: { values: "true:false" }
+            }}
+          >
+            Log Time Series
           </TableHeaderColumn>
         </BootstrapTable>
       </div>

@@ -112,19 +112,25 @@ class FirmwareUpgrades extends React.Component {
   }
 
   /*-------------- Delete -----------------*/
-  onAfterDeleteRow(rowKeys) {
-    let deleted = [];
+  onDeleteRow(rows, fullrows) {
+    var deleted = [];
+    console.log(fullrows);
 
-    for (var i = 0; i < rowKeys.length; i++) {
-      deleted.push(rowKeys[i]);
+    //this is wrong, fix later! need ["_id"]
+    for (var i = 0; i < fullrows.length; i++) {
+      deleted.push(fullrows[i]["_id"]);
     }
 
     if (
-      window.confirm("Are you sure you want to delete the following firmware upgrade(s) " + rowKeys)
+      window.confirm(
+        "Are you sure you want to delete the following firmware upgrades(s) " + deleted
+      )
     ) {
       fetch("https://34.229.145.29/firmware", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify({
           action: "Delete",
           ids: deleted
@@ -146,8 +152,8 @@ class FirmwareUpgrades extends React.Component {
   render() {
     const options = {
       afterInsertRow: onAfterInsertRow,
-      onAddRow: this.onAddRow
-      //afterDeleteRow: onAfterDeleteRow
+      onAddRow: this.onAddRow,
+      onDeleteRow: this.onDeleteRow
     };
     const keyBoardNav = {
       enterToEdit: true

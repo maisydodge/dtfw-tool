@@ -9,9 +9,9 @@ import { allCaps } from "../Utils";
 class AttributesField extends React.Component {
   state = {
     webconnect: false,
-    ovrcHome: false,
-    ovrcPro: false,
-    logTimeSeries: false,
+    // ovrcHome: false,
+    // ovrcPro: false,
+    // logTimeSeries: false,
     parentalControls: false,
     hasWireless: false,
     sshtunnel: {
@@ -23,9 +23,6 @@ class AttributesField extends React.Component {
 
   handleChange = e => {
     var value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
-    // if (e.target.name === "type") {
-    //   value = allCaps(value);
-    // }
     this.setState({ [e.target.name]: value });
   };
 
@@ -47,7 +44,7 @@ class AttributesField extends React.Component {
       //   <Checkbox
       //     type="checkbox"
       //     name="webconnect"
-      //     defaultChecked={this.state.webconnect}
+      //     value={this.state.webconnect}
       //     label="WebConnect"
       //     onChange={this.handleChange}
       //   />
@@ -55,7 +52,7 @@ class AttributesField extends React.Component {
       //   <Checkbox
       //     type="checkbox"
       //     name="ovrcHome"
-      //     defaultChecked={this.state.ovrcHome}
+      //     value={this.state.ovrcHome}
       //     label="OvrC Home"
       //     onChange={this.handleChange}
       //   />{" "}
@@ -63,7 +60,7 @@ class AttributesField extends React.Component {
       //   <Checkbox
       //     type="checkbox"
       //     name="ovrcPro"
-      //     defaultChecked={this.state.ovrcPro}
+      //     value={this.state.ovrcPro}
       //     label="OvrC Pro"
       //     onChange={this.handleChange}
       //   />{" "}
@@ -71,7 +68,7 @@ class AttributesField extends React.Component {
       //   <Checkbox
       //     type="checkbox"
       //     name="logTimeSeries"
-      //     defaultChecked={this.state.logTimeSeries}
+      //     value={this.state.logTimeSeries}
       //     label="Log Time Series"
       //     onChange={this.handleChange}
       //   />{" "}
@@ -79,7 +76,7 @@ class AttributesField extends React.Component {
       //   <Checkbox
       //     type="checkbox"
       //     name="parentalControls"
-      //     defaultChecked={this.state.parentalControls}
+      //     value={this.state.parentalControls}
       //     label="Parental Controls"
       //     onChange={this.handleChange}
       //   />{" "}
@@ -87,7 +84,7 @@ class AttributesField extends React.Component {
       //   <Checkbox
       //     type="checkbox"
       //     name="hasWireless"
-      //     defaultChecked={this.state.hasWireless}
+      //     value={this.state.hasWireless}
       //     label="hasWireless"
       //     onChange={this.handleChange}
       //   />{" "}
@@ -95,7 +92,7 @@ class AttributesField extends React.Component {
       //   <Checkbox
       //     type="checkbox"
       //     name="supports"
-      //     defaultChecked={this.state.sshtunnel.supports}
+      //     value={this.state.sshtunnel.supports}
       //     label="SSH Tunnel: Supports"
       //     onChange={this.handleChangeSSH}
       //   />{" "}
@@ -129,35 +126,35 @@ class AttributesField extends React.Component {
           <input
             type="checkbox"
             name="webconnect"
-            value={this.state.webconnect}
+            checked={this.state.webconnect}
             label="WebConnect"
             onChange={this.handleChange}
           />
           <br />{" "}
         </div>
-        <div>
+        {/* <div>
           OvrC Home &nbsp;
           <input
             type="checkbox"
             name="ovrcHome"
-            value={this.state.ovrcHome}
+            checked={this.state.ovrcHome}
             label="OvrC Home"
             onChange={this.handleChange}
           />{" "}
           <br />{" "}
-        </div>
-        <div>
+        </div> */}
+        {/* <div>
           OvrC Pro &nbsp;
           <input
             type="checkbox"
             name="ovrcPro"
-            value={this.state.ovrcPro}
+            checked={this.state.ovrcPro}
             label="OvrC Pro"
             onChange={this.handleChange}
           />{" "}
           <br />
-        </div>
-        <div>
+        </div> */}
+        {/* <div>
           Log Time Series &nbsp;
           <input
             type="checkbox"
@@ -167,7 +164,7 @@ class AttributesField extends React.Component {
             onChange={this.handleChange}
           />{" "}
           <br />
-        </div>
+        </div> */}
         <div>
           Parental Controls &nbsp;
           <input
@@ -196,7 +193,6 @@ class AttributesField extends React.Component {
             type="checkbox"
             name="supports"
             checked={this.state.sshtunnel.supports}
-            label="SSH Tunnel: Supports"
             onChange={this.handleChangeSSH}
           />{" "}
           <br />
