@@ -14,9 +14,7 @@ class ModelField extends React.Component {
   };
 
   getFieldValue = () => {
-    //console.log("Model getFieldValue: ");
     let index = this.refs.selectedVal.state.selectedIndex;
-    //console.log(this.state.models[index]);
     return this.state.models[index].value;
   };
 
@@ -31,8 +29,6 @@ class ModelField extends React.Component {
   render() {
     const { currentValue } = this.state.models;
 
-    //console.log("Model current value: " + currentValue);
-
     if (this.state.models[this.state.models.length - 1].value !== "") {
       addNull(this.state.models);
     }
@@ -45,8 +41,8 @@ class ModelField extends React.Component {
         search
         selection
         fluid
-        //allowAdditions
         value={currentValue}
+        //allowAdditions
         //onAddItem={this.handleAddition}
         onChange={this.handleChange}
       />

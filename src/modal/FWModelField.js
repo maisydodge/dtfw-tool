@@ -42,8 +42,8 @@ class FWModelField extends React.Component {
         selection
         fluid
         multiple
-        //allowAdditions
         value={this.state.selected}
+        //allowAdditions
         //onAddItem={this.handleAddition}
         onChange={this.handleChange}
       />

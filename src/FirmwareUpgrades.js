@@ -21,10 +21,7 @@ class FirmwareUpgrades extends React.Component {
   componentWillMount() {
     fetch("https://34.229.145.29/firmware", {
       method: "POST",
-      headers: {
-        //"Allow-Control-Allow-Origin": "*",
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action: "Read" })
     })
       .then(response => {
@@ -54,10 +51,7 @@ class FirmwareUpgrades extends React.Component {
 
     fetch("https://34.229.145.29/firmware", {
       method: "POST",
-      headers: {
-        //"Allow-Control-Allow-Origin": "*",
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         action: "Create",
         parent: "",
@@ -70,7 +64,6 @@ class FirmwareUpgrades extends React.Component {
       .then(result => {
         console.log(result);
         this.state.firmwareupgrades.push(row);
-        console.log("Length should be + 1: " + this.state.firmwareupgrades.length);
         alert(result.message);
         this.setState({
           firmware: this.state.firmwareupgrades
@@ -92,10 +85,7 @@ class FirmwareUpgrades extends React.Component {
 
     fetch("https://34.229.145.29/firmware", {
       method: "POST",
-      headers: {
-        //"Allow-Control-Allow-Origin": "*",
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         action: "Update",
         ids: [row["_id"]],
@@ -116,7 +106,6 @@ class FirmwareUpgrades extends React.Component {
     var deleted = [];
     console.log(fullrows);
 
-    //this is wrong, fix later! need ["_id"]
     for (var i = 0; i < fullrows.length; i++) {
       deleted.push(fullrows[i]["_id"]);
     }
@@ -128,9 +117,7 @@ class FirmwareUpgrades extends React.Component {
     ) {
       fetch("https://34.229.145.29/firmware", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action: "Delete",
           ids: deleted
@@ -153,7 +140,8 @@ class FirmwareUpgrades extends React.Component {
     const options = {
       afterInsertRow: onAfterInsertRow,
       onAddRow: this.onAddRow,
-      onDeleteRow: this.onDeleteRow
+      onDeleteRow: this.onDeleteRow,
+      searchDelayTime: 1000
     };
     const keyBoardNav = {
       enterToEdit: true
@@ -192,7 +180,6 @@ class FirmwareUpgrades extends React.Component {
             dataField="url"
             editable={{
               type: "textarea",
-              //validator: urlValidator,
               placeholder: "Enter URL"
             }}
             tdStyle={{ whiteSpace: "normal" }}
@@ -236,26 +223,6 @@ class FirmwareUpgrades extends React.Component {
           >
             Platform
           </TableHeaderColumn>
-          {/* <TableHeaderColumn
-            dataField="tftpStatus"
-            editable={{ type: "checkbox", options: { values: "true:false" } }}
-            dataFormat={booleanCheck}
-            width={"170"}
-          >
-            TFTP Status (optional)
-          </TableHeaderColumn>
-          <TableHeaderColumn
-            dataField="tftpURL"
-            editable={{
-              type: "textarea",
-              validator: tftpURLValidator,
-              placeholder: "Enter TFTP URL"
-            }}
-            tdStyle={{ whiteSpace: "normal" }}
-            width={"230"}
-          >
-            TFTP URL
-          </TableHeaderColumn> */}
           <TableHeaderColumn
             dataField="models"
             editable={false}
@@ -269,8 +236,7 @@ class FirmwareUpgrades extends React.Component {
             dataField="attributes"
             expandable={false}
             hidden
-            editable={{ type: "textarea", placeholder: "Enter Attributes (separated by newline)" }}
-            //dataFormat={attrFormatter}
+            editable={{ type: "textarea", placeholder: "Enter Attributes" }}
             customInsertEditor={{ getElement: customFWAttr }}
           >
             Attributes
@@ -321,7 +287,6 @@ class FirmwareUpgrades extends React.Component {
               type: "textarea",
               placeholder: "Enter Prerequisites"
             }}
-            //dataFormat={prereqFormatter}
             customInsertEditor={{ getElement: customPrereq }}
           >
             Prerequisites

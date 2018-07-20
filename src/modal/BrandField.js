@@ -14,9 +14,7 @@ class BrandField extends React.Component {
   };
 
   getFieldValue = () => {
-    //console.log("Brand getFieldValue: ");
     let index = this.refs.selectedVal.state.selectedIndex;
-    //console.log(this.state.brands[index]);
     return this.state.brands[index].value;
   };
 
@@ -31,9 +29,6 @@ class BrandField extends React.Component {
   render() {
     const { currentValue } = this.state.brands;
 
-    //console.log("Brand current value: " + currentValue);
-    //console.log("Brand current value index: " + findValue(brand_options, currentValue));
-
     if (this.state.brands[this.state.brands.length - 1].value !== "") {
       addNull(this.state.brands);
     }
@@ -46,8 +41,8 @@ class BrandField extends React.Component {
         search
         selection
         fluid
-        //allowAdditions
         value={currentValue}
+        //allowAdditions
         //onAddItem={this.handleAddition}
         onChange={this.handleChange}
       />

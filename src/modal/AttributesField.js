@@ -79,7 +79,6 @@ class AttributesField extends React.Component {
             onChange={this.handleChangeSSH}
           />
         </div>
-        <br />
         <div>
           SSH Tunnel: Protocol &nbsp;
           <Input

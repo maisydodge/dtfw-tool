@@ -37,10 +37,7 @@ class DeviceTypes extends React.Component {
   componentWillMount() {
     fetch("https://34.229.145.29/devicetypes", {
       method: "POST",
-      headers: {
-        //"Allow-Control-Allow-Origin": "*",
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action: "Read" })
     })
       .then(response => {
@@ -70,9 +67,8 @@ class DeviceTypes extends React.Component {
       }
       docs[0][prop] = row[prop];
     }
-    docs[0].attributes = row.attributes;
 
-    console.log(JSON.stringify(docs));
+    docs[0].attributes = row.attributes;
 
     //checks for duplicates (if id's are the same)
     for (var i = 0; i < this.state.devicetypes.length; i++) {
@@ -81,10 +77,7 @@ class DeviceTypes extends React.Component {
 
     fetch("https://34.229.145.29/devicetypes", {
       method: "POST",
-      headers: {
-        //"Allow-Control-Allow-Origin": "*",
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         action: "Create",
         documents: docs
@@ -96,14 +89,11 @@ class DeviceTypes extends React.Component {
       .then(result => {
         console.log(result);
         this.state.devicetypes.push(row);
-        console.log("Length should be + 1: " + this.state.devicetypes.length);
         alert(result.message);
         this.setState({
           devicetypes: this.state.devicetypes
         });
       });
-    row.attributes.type = docs[0].type;
-    row.attributes.label = docs[0].label;
   }
 
   /*-------------- Update -----------------*/
@@ -122,10 +112,7 @@ class DeviceTypes extends React.Component {
 
     fetch("https://34.229.145.29/devicetypes", {
       method: "POST",
-      headers: {
-        //"Allow-Control-Allow-Origin": "*",
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         action: "Update",
         ids: [row["_id"]],
@@ -146,7 +133,6 @@ class DeviceTypes extends React.Component {
     var deleted = [];
     console.log(fullrows);
 
-    //this is wrong, fix later! need ["_id"]
     for (var i = 0; i < fullrows.length; i++) {
       deleted.push(fullrows[i]["_id"]);
     }
@@ -156,9 +142,7 @@ class DeviceTypes extends React.Component {
     ) {
       fetch("https://34.229.145.29/devicetypes", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action: "Delete",
           ids: deleted
@@ -231,7 +215,6 @@ class DeviceTypes extends React.Component {
         </center>
         <BootstrapTable
           ref="table"
-          //data={applyDefaults(this.state.devicetypes, defaultAttributes)}
           data={applyDefaults(this.state.devicetypes, defaultAttributes)}
           cellEdit={cellEditProp}
           insertRow={true}

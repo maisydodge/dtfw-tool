@@ -9,7 +9,7 @@ export const defaultAttributes = {
   parentalControls: false
 };
 
-/*----- Constants for dropdowns -----*/
+/*----- Functions to populate dropdowns -----*/
 
 export function cat_options(data) {
   return makeUnique(data.map(({ category }) => ({ value: category, text: category })));
@@ -33,54 +33,6 @@ export function fwmodel_options(data) {
   options = makeUnique(options.map(model => ({ value: model, text: model })));
   return options;
 }
-
-/*------------ Dropdown Populators ------------ */
-
-/**
- * Summary: Populate the dropdown menus based on prior dropdown selection.
- * Description: Category presents all options, Brand is filtered by selected category,
- *              and Model is filtered by selected category and brand.
- *    @param cell
- *    @return categories, brands, models - arrays of dropdown selection options
- */
-// export function populateCategory(cell) {
-//   let categories = [];
-//   for (var i = 0; i < dt_data.length; i++) {
-//     if (categories.indexOf(dt_data[i]["category"]) === -1) {
-//       categories.push(dt_data[i]["category"]);
-//     }
-//   }
-//   return categories;
-// }
-
-// export function populateBrand(cell) {
-//   let brands = [];
-//   for (var i = 0; i < dt_data.length; i++) {
-//     if (brands.indexOf(dt_data[i]["brandName"]) === -1) {
-//       if (cell === undefined || dt_data[i]["category"] === cell.category) {
-//         brands.push(dt_data[i]["brandName"]);
-//       }
-//     }
-//   }
-//   return brands;
-// }
-
-// export function populateModel(cell) {
-//   let models = [];
-//   for (var i = 0; i < dt_data.length; i++) {
-//     if (models.indexOf(dt_data[i]["model"]) === -1) {
-//       if (cell === undefined) {
-//         models.push(dt_data[i]["model"]);
-//       } else if (
-//         dt_data[i]["category"] === cell.category &&
-//         dt_data[i]["brandName"] === cell.brandName
-//       ) {
-//         models.push(dt_data[i]["model"]);
-//       }
-//     }
-//   }
-//   return models;
-// }
 
 /*------------ Data Formatters ------------ */
 
@@ -197,42 +149,6 @@ export function allCaps(cell) {
   return upper;
 }
 
-/**
- * Summary: Formats the firmware upgrades attributes property to an object
- *    @param cell, the value at the cell
- *    @return myobject, cell formatted as an object
- */
-// export function attrFormatter(cell) {
-//   if (cell !== null && cell instanceof Object) {
-//     return cell;
-//   }
-//   var myobject = {};
-//   if (cell === null) {
-//     return myobject;
-//   }
-//   var lines = cell.split("\n");
-//   for (var i = 0; i < lines.length; i++) {
-//     let current = lines[i].split(":");
-//     myobject[current[0]] = current[1];
-//   }
-//   console.log(myobject);
-//   return myobject;
-// }
-
-/**
- * Summary: Formats the firmware upgrades prerequisites property to an array of an object
- *    @param cell, the value at the cell
- *    @return myarray, [{}]
- */
-// export function prereqFormatter(cell) {
-//   if (cell !== null && cell.constructor === Array) {
-//     return cell;
-//   }
-//   var myarray = [];
-//   myarray[0] = cell;
-//   return myarray;
-// }
-
 /*------------ Misc ------------ */
 
 /**
@@ -243,15 +159,13 @@ export function allCaps(cell) {
  */
 export function applyDefaults(data, defaultAttributes) {
   for (var i = 0; i < data.length; i++) {
-    // if (data[i].attributes === undefined) {
-    //   data[i].attributes = [];
-    // }
-
+    // In order to display in the expandable attributes table
     fillAttributes(data[i], "type");
     fillAttributes(data[i], "label");
     fillAttributes(data[i], "ovrcPro");
     fillAttributes(data[i], "ovrcHome");
     fillAttributes(data[i], "logTimeSeries");
+
     let new_attrs = [];
     new_attrs.push(data[i].attributes);
     let attributes = new_attrs;

@@ -14,9 +14,7 @@ class CategoryField extends React.Component {
   };
 
   getFieldValue = () => {
-    //console.log("Category getFieldValue: ");
     let index = this.refs.selectedVal.state.selectedIndex;
-    //console.log(this.state.categories[index]);
     return this.state.categories[index].value;
   };
 
@@ -31,9 +29,6 @@ class CategoryField extends React.Component {
   render() {
     const { currentValue } = this.state.categories;
 
-    //console.log("Category current value: " + currentValue);
-    //console.log("Category current value index: " + findValue(cat_options, currentValue));
-
     if (this.state.categories[this.state.categories.length - 1].value !== "") {
       addNull(this.state.categories);
     }
@@ -46,8 +41,8 @@ class CategoryField extends React.Component {
         search
         selection
         fluid
-        //allowAdditions
         value={currentValue}
+        //allowAdditions
         //onAddItem={this.handleAddition}
         onChange={this.handleChange}
       />

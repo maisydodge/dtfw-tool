@@ -2,8 +2,8 @@ import React from "react";
 import { Form, TextArea } from "semantic-ui-react";
 
 /**
- * Summary: Class for the firmware upgrade prerequisites
- *    @return 3 text areas for the 3 prerequisites
+ * Summary: Class for the firmware upgrade attributes
+ *    @return text area
  */
 class FWAttributesField extends React.Component {
   state = {
@@ -31,7 +31,7 @@ class FWAttributesField extends React.Component {
         <TextArea
           type="text"
           //value={this.state.attributes}
-          placeholder="Enter Attributes"
+          placeholder="Enter Attributes -> ____:_____"
           onChange={this.handleChange}
         />
       </Form>
