@@ -1,12 +1,303 @@
 import React from "react";
 
+var catalog = {
+  Audio: {
+    /*"Episode": {
+          "AMPLIFIER": {
+              label: "Amplifier",
+              models: [
+                  "ESA-70V2CH-150W",
+                  "ESA-70V2CH-300W",
+                  "ESA-70V2CH-500W"
+              ]
+          }
+      },*/
+    Autonomic: {
+      AMPLIFIER: {
+        label: "Amplifier",
+        overrideAttributes: { sshtunnel: { supports: true, port: 80.0, protocol: "HTTP" } },
+        models: ["AU-M-120e", "AU-M-401e", "AU-M-801e"]
+      }
+    }
+  },
+  /*"Control System": {
+      "URC": {
+          "URC": {
+              label: "URC",
+              models: [
+                  "MRX-8",
+                  "MRX-10",
+                  "MRX-10N",
+                  "MRX-20",
+                  "",
+                  "CP-1",
+                  "CP-2"
+              ]
+          }
+      },
+      "Control4": {
+          "CONTROL4": {
+              label: "Control4",
+              models: [
+                  "EA1",
+                  "EA3",
+                  "EA5",
+                  "",
+                  "HC250",
+                  "HC800"
+              ]
+          }
+      }
+  },*/
+  Media: {
+    Binary: {
+      MOIP: {
+        label: "MOIP",
+        overrideAttributes: {
+          ovrcHome: false
+        },
+        models: [
+          "B-900-MOIP-4K-CTRL",
+          "",
+          "B-900-AGENT",
+          "B-900-DEC-RS",
+          "B-900-ENC-RS",
+          "",
+          "MOIP-100-DIR"
+        ]
+      }
+    },
+    /*"Pioneer": {
+          "PIONEER": {
+              label: "Pioneer",
+              models: [
+                  "SC-LX101",
+                  "SC-LX301",
+                  "SC-LX501",
+                  "SC-LX701",
+                  "SX-LX801",
+                  "SX-LX901",
+                  "",
+                  "VSX-831",
+                  "VSX-1131"
+              ]
+          }
+      },*/
+    Autonomic: {
+      STREAMING: {
+        label: "Media Streaming Server",
+        overrideAttributes: {
+          sshtunnel: {
+            supports: true,
+            port: 80.0,
+            protocol: "HTTP"
+          }
+        },
+        models: ["MMS-1e", "MMS-3e", "MMS-5e"]
+      }
+    }
+  },
+  Networking: {
+    "Araknis Networks": {
+      WAP: {
+        label: "Access Point",
+        overrideAttributes: {
+          logTimeSeries: true,
+          parentalControls: true
+        },
+        models: [
+          "AN100",
+          "AN300",
+          "",
+          "AN-100-AP-I-N",
+          "AN-300-AP-I-N",
+          "AN-700-AP-I-N",
+          "AN-100-AP-I-N-BETA",
+          "AN-300-AP-I-N-BETA",
+          "",
+          "AN-500-AP-I-AC",
+          "AN-700-AP-I-AC",
+          "AN-700-AP-O-AC",
+          "AN-500-AP-I-AC-BETA",
+          "AN-700-AP-I-AC-BETA"
+        ]
+      },
+      ROUTER: {
+        label: "Router",
+        models: ["AN-300-RT-4L2W", "AN-300-RT-4L2W-BETA"]
+      },
+      SWITCH: {
+        label: "Switch",
+        overrideAttributes: {
+          logTimeSeries: true
+        },
+        models: [
+          "AN-110-SW-5",
+          "AN-110-SW-8",
+          "AN-110-SW-16",
+          "AN-110-SW-24",
+          "",
+          "AN-210-SW-8-POE",
+          "AN-210-SW-16-POE",
+          "AN-210-SW-24-POE",
+          "AN-210-SW-48-POE",
+          "",
+          "AN-300-SW-8",
+          "AN-300-SW-16",
+          "AN-300-SW-24",
+          "",
+          "AN-300-SW-8-POE",
+          "AN-300-SW-16-POE",
+          "AN-300-SW-24-POE",
+          "",
+          "AN-300-SW-F-24",
+          "AN-300-SW-R-24",
+          "",
+          "AN-310-SW-8",
+          "AN-310-SW-16",
+          "AN-310-SW-24",
+          "AN-310-SW-48",
+          "",
+          "AN-310-SW-8-POE",
+          "AN-310-SW-16-POE",
+          "AN-310-SW-24-POE"
+        ]
+      }
+    },
+    OvrC: {
+      HUB: {
+        label: "Hub",
+        ovrcPro: true,
+        overrideAttributes: {
+          logTimeSeries: true,
+          ovrcHome: false,
+          ovrcPro: true,
+          sshtunnel: {
+            supports: true,
+            port: 80.0,
+            protocol: "HTTP"
+          }
+        },
+        models: ["HUB", "OVRC-100-HUB", "OVRC-300-HUB"]
+      }
+    }
+  },
+  Power: {
+    WattBox: {
+      WATTBOX: {
+        label: "WattBox",
+        overrideAttributes: { sshtunnel: { supports: true, port: 80.0, protocol: "HTTP" } },
+        models: [
+          "WB-800VS-IPVM-12",
+          "WB-800VS-IPVM-18"
+          /*"WB-200-IPCE-3",
+                  "WB-200VB-IPCE-6",
+                  "",
+                  "WB-300-IP-3",
+                  "WB-300VB-IP-5",
+                  "",
+                  "WB-400-IPCE-8",
+                  "",
+                  "WB-500-IP-8",
+                  "",
+                  "WB-600-IPVCE-12",
+                  "WB-600CH-IPVCE-12",
+                  "",
+                  "WB-700-IPV-12",
+                  "WB-700CH-IPV-12"*/
+        ]
+      }
+    }
+  },
+  Surveillance: {
+    Luma: {
+      NVR: {
+        label: "NVR",
+        overrideAttributes: {
+          webConnect: false
+        },
+        models: [
+          "LUM-500-NVR-4CH",
+          "LUM-500-NVR-8CH",
+          "LUM-500-NVR-16CH",
+          "",
+          "LUM-501-NVR-8CH",
+          "LUM-501-NVR-16CH",
+          "",
+          "LUM-510-NVR-4CH",
+          "LUM-510-NVR-8CH",
+          "LUM-510-NVR-16CH"
+        ]
+      },
+      DVR: {
+        label: "DVR",
+        models: [
+          "LUM-500-DVR-4CH",
+          "LUM-500-DVR-8CH",
+          "LUM-500-DVR-16CH",
+          "",
+          "LUM-501-DVR-4CH",
+          "LUM-501-DVR-8CH",
+          "LUM-501-DVR-16CH"
+        ]
+      },
+      CAMERA: {
+        label: "Camera",
+        overrideAttributes: {
+          webConnect: false
+        },
+        models: [
+          "LUM-300-BUL-IP-GR",
+          "LUM-300-BUL-IP-WH",
+          "LUM-300-CUB-IPW-WH",
+          "LUM-300-DOM-IP-BL",
+          "LUM-300-DOM-IP-WH",
+          "",
+          "LUM-500-BUL-IP-GR",
+          "LUM-500-BUL-IP-WH",
+          "LUM-500-DOM-IP-BL",
+          "LUM-500-DOM-IP-WH",
+          "LUM-500-TUR-IP-BL",
+          "LUM-500-TUR-IP-WH",
+          "",
+          "LUM-700-BUL-IPH-GR",
+          "LUM-700-BUL-IPH-WH",
+          "LUM-700-DOM-IPH-BL",
+          "LUM-700-DOM-IPH-WH"
+        ]
+      }
+    },
+    "Wirepath Surveillance": {
+      DVR: {
+        label: "DVR",
+        models: ["WPS-500-DVR-4CH", "WPS-500-DVR-8CH", "WPS-500-DVR-16CH"]
+      },
+      CAMERA: {
+        label: "Camera",
+        models: [
+          "WPS-300-BUL-IP-(WH/GR)",
+          "WPS-300-CUB-IP-WH",
+          "WPS-300-DOM-IP-(BL/WH)",
+          "WPS-500-PTZ-IP-WH",
+          "WPS-550-BUL-IP-(WH/GR)",
+          "WPS-550-DOM-IP-(BL/WH)",
+          "WPS-750-BUL-IP-(WH/GR)",
+          "WPS-750-BUL-IPH-(WH/GR)",
+          "WPS-750-DOM-IP-(BL/WH)",
+          "WPS-750-DOM-IPH-(BL/WH)"
+        ]
+      }
+    }
+  }
+};
 /*----- Default Attributes -----*/
 export const defaultAttributes = {
   webconnect: true,
   ovrcHome: true,
   ovrcPro: false,
   logTimeSeries: false,
-  parentalControls: false
+  parentalControls: false,
+  hasWireless: false
 };
 
 /*----- Functions to populate dropdowns -----*/
@@ -21,6 +312,222 @@ export function brand_options(data) {
 
 export function model_options(data) {
   return makeUnique(data.map(({ model }) => ({ value: model, text: model })));
+}
+
+export function dropdownHelper(data) {
+  return makeUnique(data.map(prop => ({ value: prop, text: prop })));
+}
+
+export function populateCategory(cell) {
+  let categories = Object.keys(catalog);
+  return categories;
+}
+
+export function populateBrand(cell) {
+  let brand_options = [];
+  let categories = Object.keys(catalog);
+  for (var i = 0; i < categories.length; i++) {
+    if (cell === undefined || categories[i] === cell.category) {
+      let brands = Object.keys(catalog[categories[i]]);
+      brand_options = brands;
+    }
+  }
+  return brand_options;
+}
+
+export function populateModel(cell) {
+  let model_options = [];
+  let categories = Object.keys(catalog);
+  for (var i = 0; i < categories.length; i++) {
+    let brands = Object.keys(catalog[categories[i]]);
+    for (var j = 0; j < brands.length; j++) {
+      if (cell === undefined || (categories[i] === cell.category && brands[j] === cell.brandName)) {
+        let types = Object.keys(catalog[categories[i]][brands[j]]);
+        for (var k = 0; k < types.length; k++) {
+          let models = catalog[categories[i]][brands[j]][types[k]].models;
+          for (var l = 0; l < models.length; l++) {
+            model_options.push(models[l]);
+          }
+        }
+      }
+    }
+  }
+  return model_options;
+}
+
+// export function updateAttributes(cellName, cellValue, row) {
+//   let category = row.category;
+//   let brand = row.brandName;
+
+//   let props = {};
+//   props[cellName] = cellValue;
+//   props.attributes = {};
+
+//   let types = Object.keys(catalog[category][brand]);
+//   for (var i = 0; i < types.length; i++) {
+//     let models = catalog[category][brand][types[i]].models;
+//     for (var k = 0; k < models.length; k++) {
+//       if (cellValue === models[k]) {
+//         let new_attributes = Object.keys(catalog[category][brand][types[i]].overrideAttributes);
+//         for (var m = 0; m < new_attributes.length; m++) {
+//           props.attributes[new_attributes[m]] =
+//             catalog[category][brand][types[i]].overrideAttributes[new_attributes[m]];
+//         }
+//       }
+//     }
+//   }
+
+//   return props;
+// }
+
+export function fillDropBrand(category) {
+  let brand_options = [];
+  let categories = Object.keys(catalog);
+
+  for (var i = 0; i < categories.length; i++) {
+    let brands = Object.keys(catalog[categories[i]]);
+    if (category === "") {
+      for (var j = 0; j < brands.length; j++) {
+        brand_options.push(brands[j]);
+      }
+    }
+    if (category === undefined || categories[i] === category) {
+      brand_options = brands;
+    }
+  }
+  return brand_options;
+}
+
+export function fillDropModel(brand) {
+  let model_options = [];
+  let categories = Object.keys(catalog);
+
+  for (var i = 0; i < categories.length; i++) {
+    let brands = Object.keys(catalog[categories[i]]);
+    for (var j = 0; j < brands.length; j++) {
+      if (brands[j] === brand || brand === "") {
+        let types = Object.keys(catalog[categories[i]][brands[j]]);
+        for (var k = 0; k < types.length; k++) {
+          let models = catalog[categories[i]][brands[j]][types[k]].models;
+          for (var l = 0; l < models.length; l++) {
+            model_options.push(models[l]);
+          }
+        }
+      }
+    }
+  }
+  return model_options;
+}
+
+export function getAttributes(data) {
+  let category = data.category;
+  let brand = data.brandName;
+  let model = data.model;
+  let props = {};
+  props.hasWireless = defaultAttributes.hasWireless;
+  props.parentalControls = defaultAttributes.parentalControls;
+  props.webconnect = defaultAttributes.webconnect;
+  props.sshtunnel = { supports: false, port: 80, protocol: "HTTP" };
+
+  if (model === "") {
+    return props;
+  }
+  let types = Object.keys(catalog[category][brand]);
+  for (let i = 0; i < types.length; i++) {
+    let models = catalog[category][brand][types[i]].models;
+    for (var j = 0; j < models.length; j++) {
+      if (model === models[j]) {
+        if (catalog[category][brand][types[i]].overrideAttributes !== undefined) {
+          let new_attributes = Object.keys(catalog[category][brand][types[i]].overrideAttributes);
+          let prop_attributes = Object.keys(props);
+          for (var k = 0; k < new_attributes.length; k++) {
+            for (var m = 0; m < prop_attributes.length; m++) {
+              if (new_attributes[k] === prop_attributes[m])
+                props[new_attributes[k]] =
+                  catalog[category][brand][types[i]].overrideAttributes[new_attributes[k]];
+            }
+          }
+        }
+      }
+    }
+  }
+  return props;
+}
+
+export function getProperties(data, name) {
+  let prop = {};
+  let category = data.category;
+  let brand = data.brandName;
+  let model = data.model;
+
+  if (model === "") {
+    return prop;
+  }
+  let types = Object.keys(catalog[category][brand]);
+  for (var i = 0; i < types.length; i++) {
+    let models = catalog[category][brand][types[i]].models;
+    for (var j = 0; j < models.length; j++) {
+      let type = catalog[category][brand][types[i]];
+      if (model === models[j]) {
+        if (name === "Type") {
+          prop.type = types[i];
+        }
+        if (name === "Label") {
+          prop.label = catalog[category][brand][types[i]].label;
+        }
+        if (name === "OvrC Pro") {
+          type.overrideAttributes.ovrcPro === undefined
+            ? (prop.ovrcPro = defaultAttributes.ovrcPro)
+            : (prop.ovrcPro = type.overrideAttributes.ovrcPro);
+        }
+        if (name === "OvrC Home") {
+          type.overrideAttributes.ovrcHome === undefined
+            ? (prop.ovrcHome = defaultAttributes.ovrcHome)
+            : (prop.ovrcHome = type.overrideAttributes.ovrcHome);
+        }
+        if (name === "Log Time Series") {
+          type.overrideAttributes.logTimeSeries === undefined
+            ? (prop.logTimeSeries = defaultAttributes.logTimeSeries)
+            : (prop.logTimeSeries = type.overrideAttributes.logTimeSeries);
+        }
+      }
+    }
+  }
+  return prop;
+}
+
+export function updateProperties(row) {
+  let props = {};
+  let category = row.category;
+  let brand = row.brandName;
+  let model = row.model;
+
+  if (model === "") {
+    return props;
+  }
+  let types = Object.keys(catalog[category][brand]);
+  for (var i = 0; i < types.length; i++) {
+    let models = catalog[category][brand][types[i]].models;
+    for (var j = 0; j < models.length; j++) {
+      let type = catalog[category][brand][types[i]];
+      if (model === models[j]) {
+        props.type = types[i];
+        props.label = catalog[category][brand][types[i]].label;
+        if (type.overrideAttributes !== undefined) {
+          type.overrideAttributes.ovrcPro === undefined
+            ? (props.ovrcPro = defaultAttributes.ovrcPro)
+            : (props.ovrcPro = type.overrideAttributes.ovrcPro);
+          type.overrideAttributes.ovrcHome === undefined
+            ? (props.ovrcHome = defaultAttributes.ovrcHome)
+            : (props.ovrcHome = type.overrideAttributes.ovrcHome);
+          type.overrideAttributes.logTimeSeries === undefined
+            ? (props.logTimeSeries = defaultAttributes.logTimeSeries)
+            : (props.logTimeSeries = type.overrideAttributes.logTimeSeries);
+        }
+      }
+    }
+  }
+  return props;
 }
 
 export function fwmodel_options(data) {
@@ -210,9 +717,10 @@ export function makeUnique(options) {
  *    @return pairs - object of key value pairs
  *            For example, filterOptions(cat_options) = {'Media':'Media', 'Networking':'Networking', 'Power':'Power', 'Surveillance':'Surveillance'}
  */
-export function filterOptions(options) {
+export function filterOptions(options, row) {
   let pairs = {};
   for (var i = 0; i < options.length; i++) {
+    if (options[i].text === undefined) continue;
     pairs[options[i].text] = options[i].text;
   }
   return pairs;

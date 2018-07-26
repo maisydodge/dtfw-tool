@@ -15,6 +15,11 @@ class FWAttributesField extends React.Component {
   };
 
   getFieldValue = () => {
+    if (
+      Object.keys(this.state.attributes).length === 0 &&
+      this.state.attributes.constructor === Object
+    )
+      return this.state.attributes;
     var myobject = {};
     var lines = this.state.attributes.split("\n");
     for (var i = 0; i < lines.length; i++) {
@@ -31,7 +36,7 @@ class FWAttributesField extends React.Component {
         <TextArea
           type="text"
           //value={this.state.attributes}
-          placeholder="Enter Attributes -> ____:_____"
+          placeholder="Enter Attributes -> ____:____"
           onChange={this.handleChange}
         />
       </Form>

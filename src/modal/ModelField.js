@@ -1,7 +1,7 @@
 import React from "react";
 import { Dropdown } from "semantic-ui-react";
 
-import { model_options } from "../Utils";
+import { dropdownHelper, fillDropModel } from "../Utils";
 import { addNull } from "./ModalUtils";
 
 /**
@@ -10,8 +10,12 @@ import { addNull } from "./ModalUtils";
  */
 class ModelField extends React.Component {
   state = {
-    models: model_options(this.props.data)
+    models: dropdownHelper(fillDropModel(this.props.data))
   };
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ models: dropdownHelper(fillDropModel(nextProps.data)) });
+  }
 
   getFieldValue = () => {
     let index = this.refs.selectedVal.state.selectedIndex;
@@ -24,7 +28,10 @@ class ModelField extends React.Component {
   //   });
   // };
 
-  handleChange = (e, { value }) => this.setState({ value: value });
+  handleChange = (e, { value }) => {
+    this.setState({ value: value });
+    this.props.sendModel(value);
+  };
 
   render() {
     const { currentValue } = this.state.models;

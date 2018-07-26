@@ -3,6 +3,20 @@ import ReleaseNotesField from "./ReleaseNotesField";
 import PrerequisitesField from "./PrerequisitesField";
 import FWAttributesField from "./FWAttributesField";
 import AttributesField from "./AttributesField";
+// import CategoryField from "./CategoryField";
+// import BrandField from "./BrandField";
+// import ModelField from "./ModelField";
+
+// export function customCategory(column, attr, editorClass, ignoreEditable, defaultValue) {
+//   return <CategoryField ref={attr.ref} />;
+// }
+
+// export function customBrand(column, attr, editorClass, ignoreEditable, defaultValue) {
+//   return <BrandField ref={attr.ref} />;
+// }
+// export function customModel(column, attr, editorClass, ignoreEditable, defaultValue) {
+//   return <ModelField ref={attr.ref} />;
+// }
 
 export function customReleaseNotes(column, attr, editorClass, ignoreEditable, defaultValue) {
   return (
@@ -16,6 +30,11 @@ export function customPrereq(column, attr, editorClass, ignoreEditable, defaultV
   );
 }
 
+// export function customAttr(column, attr, editorClass, ignoreEditable, defaultValue) {
+//   return (
+//     <AttributesField ref={attr.ref} editorClass={editorClass} ignoreEditable={ignoreEditable} />
+//   );
+// }
 export function customAttr(column, attr, editorClass, ignoreEditable, defaultValue) {
   return (
     <AttributesField ref={attr.ref} editorClass={editorClass} ignoreEditable={ignoreEditable} />

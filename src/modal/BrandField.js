@@ -1,7 +1,7 @@
 import React from "react";
 import { Dropdown } from "semantic-ui-react";
 
-import { brand_options } from "../Utils";
+import { fillDropBrand, dropdownHelper } from "../Utils";
 import { addNull } from "./ModalUtils";
 
 /**
@@ -10,8 +10,12 @@ import { addNull } from "./ModalUtils";
  */
 class BrandField extends React.Component {
   state = {
-    brands: brand_options(this.props.data)
+    brands: dropdownHelper(fillDropBrand(this.props.data))
   };
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ brands: dropdownHelper(fillDropBrand(nextProps.data)) });
+  }
 
   getFieldValue = () => {
     let index = this.refs.selectedVal.state.selectedIndex;
@@ -24,7 +28,10 @@ class BrandField extends React.Component {
   //   });
   // };
 
-  handleChange = (e, { value }) => this.setState({ currentValue: value });
+  handleChange = (e, { value }) => {
+    this.setState({ currentValue: value });
+    this.props.sendBrand(value);
+  };
 
   render() {
     const { currentValue } = this.state.brands;

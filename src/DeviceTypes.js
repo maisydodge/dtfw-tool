@@ -5,18 +5,25 @@ import AttributesTable from "./AttributesTable";
 import CategoryField from "./modal/CategoryField";
 import BrandField from "./modal/BrandField";
 import ModelField from "./modal/ModelField";
-import { customAttr } from "./modal/ModalUtils";
+import AttributesField from "./modal/AttributesField";
+import PropertiesField from "./modal/PropertiesField";
+//import { customAttr } from "./modal/ModalUtils";
 
 import {
   cat_options,
   brand_options,
-  model_options,
+  //model_options,
   defaultAttributes,
   booleanCheck,
   allCaps,
   applyDefaults,
   filterOptions,
-  onAfterInsertRow
+  onAfterInsertRow,
+  populateBrand,
+  populateModel,
+  populateCategory,
+  getAttributes,
+  updateProperties
 } from "./Utils";
 
 import { selectValidator, textValidator } from "./Validators";
@@ -25,32 +32,61 @@ class DeviceTypes extends React.Component {
   constructor() {
     super();
     this.state = {
-      devicetypes: []
+      devicetypes: [],
+      category: "",
+      brand: "",
+      model: "",
+      totalSize: 0,
+      page: 1,
+      sizePerPage: 10
     };
     this.onAddRow = this.onAddRow.bind(this);
-    this.onAfterSaveCell = this.onAfterSaveCell;
+    this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
     this.customCategory = this.customCategory.bind(this);
     this.customBrand = this.customBrand.bind(this);
     this.customModel = this.customModel.bind(this);
+    this.customAttr = this.customAttr.bind(this);
+    this.getCategory = this.getCategory.bind(this);
+    this.getBrand = this.getBrand.bind(this);
+    this.getModel = this.getModel.bind(this);
+    this.customProps = this.customProps.bind(this);
+    this.handlePageChange = this.handlePageChange.bind(this);
+    this.handleSizePerPageChange = this.handleSizePerPageChange.bind(this);
   }
 
-  componentWillMount() {
+  fetchData(page = this.state.page, size = this.state.sizePerPage) {
     fetch("https://34.229.145.29/devicetypes", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "Read" })
+      body: JSON.stringify({ action: "Read", pagination: { offset: 0 } })
     })
       .then(response => {
         return response.json();
       })
       .then(result => {
         console.log(result);
-        this.setState({ devicetypes: result.data.documents });
+        this.setState({
+          devicetypes: result.data.documents.slice((page - 1) * size, (page - 1) * size + size),
+          totalSize: result.data.documents.length
+        });
       });
+  }
+
+  handlePageChange(page, sizePerPage) {
+    this.fetchData(page, sizePerPage);
+  }
+
+  handleSizePerPageChange(sizePerPage) {
+    this.fetchData(1, sizePerPage);
+  }
+
+  componentWillMount() {
+    this.fetchData();
   }
 
   componentDidUpdate(prevProps, prevState) {
     //console.log("Current: " + JSON.stringify(this.state.devicetypes));
+    //console.log(this.state.devicetypes.length);
   }
 
   /*-------------- Create -----------------*/
@@ -70,6 +106,7 @@ class DeviceTypes extends React.Component {
 
     docs[0].attributes = row.attributes;
 
+    console.log("Docs passed to create: " + JSON.stringify(docs));
     //checks for duplicates (if id's are the same)
     for (var i = 0; i < this.state.devicetypes.length; i++) {
       if (row["_id"] === this.state.devicetypes[i]["_id"]) return;
@@ -89,7 +126,7 @@ class DeviceTypes extends React.Component {
       .then(result => {
         console.log(result);
         this.state.devicetypes.push(row);
-        alert(result.message);
+        alert(result.data.devMessage);
         this.setState({
           devicetypes: this.state.devicetypes
         });
@@ -110,6 +147,18 @@ class DeviceTypes extends React.Component {
     let props = {};
     props[cellName] = cellValue;
 
+    if (cellName === "model") {
+      let updatedAttributes = getAttributes(row);
+      props.attributes = updatedAttributes;
+      let updatedProperties = updateProperties(row);
+      let updatedPropKeys = Object.keys(updatedProperties);
+      for (var i = 0; i < updatedPropKeys.length; i++) {
+        props[updatedPropKeys[i]] = updatedProperties[updatedPropKeys[i]];
+      }
+    }
+
+    console.log("props to update" + JSON.stringify(props));
+
     fetch("https://34.229.145.29/devicetypes", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -124,7 +173,10 @@ class DeviceTypes extends React.Component {
       })
       .then(result => {
         console.log(result);
-        alert(result.message);
+        alert(result.data.devMessage);
+        this.setState({
+          devicetypes: this.state.devicetypes
+        });
       });
   }
 
@@ -157,15 +209,52 @@ class DeviceTypes extends React.Component {
     }
   }
 
+  getCategory(val) {
+    this.setState({ category: val });
+  }
+
+  getBrand(val) {
+    this.setState({ brand: val });
+  }
+
+  getModel(val) {
+    this.setState({ model: val });
+  }
+
   /*----------- Insert Modal Fields ---------------*/
   customCategory(column, attr, editorClass, ignoreEditable, defaultValue) {
-    return <CategoryField data={this.state.devicetypes} ref={attr.ref} />;
+    return <CategoryField sendCategory={this.getCategory} ref={attr.ref} />;
   }
   customBrand(column, attr, editorClass, ignoreEditable, defaultValue) {
-    return <BrandField data={this.state.devicetypes} ref={attr.ref} />;
+    return <BrandField sendBrand={this.getBrand} data={this.state.category} ref={attr.ref} />;
   }
   customModel(column, attr, editorClass, ignoreEditable, defaultValue) {
-    return <ModelField data={this.state.devicetypes} ref={attr.ref} />;
+    return <ModelField sendModel={this.getModel} data={this.state.brand} ref={attr.ref} />;
+  }
+  customAttr(column, attr, editorClass, ignoreEditable, defaultValue) {
+    return (
+      <AttributesField
+        data={{
+          category: this.state.category,
+          brandName: this.state.brand,
+          model: this.state.model
+        }}
+        ref={attr.ref}
+      />
+    );
+  }
+  customProps(column, attr, editorClass, ignoreEditable, defaultValue) {
+    return (
+      <PropertiesField
+        name={attr.placeholder}
+        data={{
+          category: this.state.category,
+          brandName: this.state.brand,
+          model: this.state.model
+        }}
+        ref={attr.ref}
+      />
+    );
   }
 
   /*----- Expand functions -----*/
@@ -191,7 +280,11 @@ class DeviceTypes extends React.Component {
       afterInsertRow: onAfterInsertRow,
       onAddRow: this.onAddRow,
       searchDelayTime: 1000,
-      onDeleteRow: this.onDeleteRow
+      onDeleteRow: this.onDeleteRow,
+      onPageChange: this.handlePageChange,
+      onSizePerPageList: this.handleSizePerPageChange,
+      page: this.state.page,
+      sizePerPage: this.state.sizePerPage
     };
     const keyBoardNav = {
       enterToEdit: true
@@ -232,6 +325,8 @@ class DeviceTypes extends React.Component {
           striped
           search
           pagination
+          fetchInfo={{ dataTotalSize: this.state.totalSize }}
+          remote
           keyBoardNav={keyBoardNav}
           hover
         >
@@ -240,7 +335,7 @@ class DeviceTypes extends React.Component {
             expandable={false}
             editable={{
               type: "select",
-              options: { values: cat_options(this.state.devicetypes) },
+              options: { values: populateCategory },
               validator: selectValidator
             }}
             customInsertEditor={{ getElement: this.customCategory }}
@@ -256,7 +351,7 @@ class DeviceTypes extends React.Component {
             expandable={false}
             editable={{
               type: "select",
-              options: { values: brand_options(this.state.devicetypes) },
+              options: { values: populateBrand },
               validator: selectValidator
             }}
             customInsertEditor={{ getElement: this.customBrand }}
@@ -272,11 +367,10 @@ class DeviceTypes extends React.Component {
             expandable={false}
             editable={{
               type: "select",
-              options: { values: model_options(this.state.devicetypes) },
+              options: { values: populateModel },
               validator: selectValidator
             }}
             customInsertEditor={{ getElement: this.customModel }}
-            isKey={true}
           >
             Model
           </TableHeaderColumn>
@@ -313,8 +407,10 @@ class DeviceTypes extends React.Component {
             dataField="type"
             expandable={false}
             hidden
-            editable={{ type: "textarea", placeholder: "Enter Type" }}
+            editable={{ type: "textarea", placeholder: "Type" }}
             dataFormat={allCaps}
+            isKey={true}
+            customInsertEditor={{ getElement: this.customProps }}
           >
             Type
           </TableHeaderColumn>
@@ -322,7 +418,8 @@ class DeviceTypes extends React.Component {
             dataField="label"
             expandable={false}
             hidden
-            editable={{ type: "textarea", validator: textValidator, placeholder: "Enter Label" }}
+            editable={{ type: "textarea", validator: textValidator, placeholder: "Label" }}
+            customInsertEditor={{ getElement: this.customProps }}
           >
             Label
           </TableHeaderColumn>
@@ -330,10 +427,8 @@ class DeviceTypes extends React.Component {
             dataField="ovrcPro"
             expandable={false}
             hidden
-            editable={{
-              type: "checkbox",
-              options: { values: "true:false" }
-            }}
+            editable={false}
+            customInsertEditor={{ getElement: this.customProps }}
           >
             OvrC Pro
           </TableHeaderColumn>
@@ -341,10 +436,8 @@ class DeviceTypes extends React.Component {
             dataField="ovrcHome"
             expandable={false}
             hidden
-            editable={{
-              type: "checkbox",
-              options: { values: "true:false" }
-            }}
+            editable={false}
+            customInsertEditor={{ getElement: this.customProps }}
           >
             OvrC Home
           </TableHeaderColumn>
@@ -352,10 +445,8 @@ class DeviceTypes extends React.Component {
             dataField="logTimeSeries"
             expandable={false}
             hidden
-            editable={{
-              type: "checkbox",
-              options: { values: "true:false" }
-            }}
+            editable={false}
+            customInsertEditor={{ getElement: this.customProps }}
           >
             Log Time Series
           </TableHeaderColumn>
@@ -364,7 +455,8 @@ class DeviceTypes extends React.Component {
             expandable={false}
             hidden
             editable={false}
-            customInsertEditor={{ getElement: customAttr }}
+            customInsertEditor={{ getElement: this.customAttr }}
+            //customInsertEditor={{ getElement: customAttr }}
           >
             Attributes
           </TableHeaderColumn>

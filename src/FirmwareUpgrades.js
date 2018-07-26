@@ -5,32 +5,55 @@ import FWModelField from "./modal/FWModelField";
 
 import { formatModels, formatDate, HTML2text, allCaps, onAfterInsertRow, text2HTML } from "./Utils";
 
-import { selectValidator, textValidator, fileSizeValidator } from "./Validators";
+import { selectValidator, textValidator, modelValidator } from "./Validators";
 
 class FirmwareUpgrades extends React.Component {
   constructor() {
     super();
     this.state = {
-      firmwareupgrades: []
+      firmwareupgrades: [],
+      totalSize: 0,
+      page: 1,
+      sizePerPage: 10
     };
     this.onAddRow = this.onAddRow.bind(this);
     this.onAfterSaveCell = this.onAfterSaveCell;
     this.customFWModel = this.customFWModel.bind(this);
+    this.handlePageChange = this.handlePageChange.bind(this);
+    this.handleSizePerPageChange = this.handleSizePerPageChange.bind(this);
   }
 
-  componentWillMount() {
+  fetchData(page = this.state.page, size = this.state.sizePerPage) {
     fetch("https://34.229.145.29/firmware", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "Read" })
+      body: JSON.stringify({ action: "Read", pagination: { offset: 0 } })
     })
       .then(response => {
         return response.json();
       })
       .then(result => {
         console.log(result);
-        this.setState({ firmwareupgrades: result.data.documents });
+        this.setState({
+          firmwareupgrades: result.data.documents.slice(
+            (page - 1) * size,
+            (page - 1) * size + size
+          ),
+          totalSize: result.data.documents.length
+        });
       });
+  }
+
+  handlePageChange(page, sizePerPage) {
+    this.fetchData(page, sizePerPage);
+  }
+
+  handleSizePerPageChange(sizePerPage) {
+    this.fetchData(1, sizePerPage);
+  }
+
+  componentWillMount() {
+    this.fetchData();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -44,7 +67,7 @@ class FirmwareUpgrades extends React.Component {
 
     for (const prop in row) {
       if (row["supported"] === undefined || row["supported"] === "false") {
-        row[prop] = false;
+        row["supported"] = false;
       } else row["supported"] = true;
       docs[0][prop] = row[prop];
     }
@@ -54,7 +77,6 @@ class FirmwareUpgrades extends React.Component {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         action: "Create",
-        parent: "",
         documents: docs
       })
     })
@@ -64,9 +86,10 @@ class FirmwareUpgrades extends React.Component {
       .then(result => {
         console.log(result);
         this.state.firmwareupgrades.push(row);
-        alert(result.message);
+        console.log(row);
+        alert(result.data.devMessage);
         this.setState({
-          firmware: this.state.firmwareupgrades
+          firmwareupgrades: this.state.firmwareupgrades
         });
       });
   }
@@ -97,7 +120,10 @@ class FirmwareUpgrades extends React.Component {
       })
       .then(result => {
         console.log(result);
-        alert(result.message);
+        alert(result.data.devMessage);
+        this.setState({
+          firmwareupgrades: this.state.firmwareupgrades
+        });
       });
   }
 
@@ -107,8 +133,10 @@ class FirmwareUpgrades extends React.Component {
     console.log(fullrows);
 
     for (var i = 0; i < fullrows.length; i++) {
+      console.log(fullrows[i]);
       deleted.push(fullrows[i]["_id"]);
     }
+    console.log("Deleted: " + deleted);
 
     if (
       window.confirm(
@@ -141,7 +169,11 @@ class FirmwareUpgrades extends React.Component {
       afterInsertRow: onAfterInsertRow,
       onAddRow: this.onAddRow,
       onDeleteRow: this.onDeleteRow,
-      searchDelayTime: 1000
+      searchDelayTime: 1000,
+      onPageChange: this.handlePageChange,
+      onSizePerPageList: this.handleSizePerPageChange,
+      page: this.state.page,
+      sizePerPage: this.state.sizePerPage
     };
     const keyBoardNav = {
       enterToEdit: true
@@ -175,12 +207,15 @@ class FirmwareUpgrades extends React.Component {
           striped
           search
           pagination
+          fetchInfo={{ dataTotalSize: this.state.totalSize }}
+          remote
         >
           <TableHeaderColumn
             dataField="url"
             editable={{
               type: "textarea",
-              placeholder: "Enter URL"
+              placeholder: "Enter URL",
+              validator: textValidator
             }}
             tdStyle={{ whiteSpace: "normal" }}
             width={"250"}
@@ -190,8 +225,8 @@ class FirmwareUpgrades extends React.Component {
           <TableHeaderColumn
             dataField="filesize"
             editable={{
-              type: "textarea",
-              validator: fileSizeValidator,
+              type: "number",
+              validator: textValidator,
               placeholder: "Enter File Size"
             }}
             tdStyle={{ whiteSpace: "normal" }}
@@ -209,7 +244,7 @@ class FirmwareUpgrades extends React.Component {
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="releaseNotes"
-            editable={{ type: "textarea" }}
+            editable={{ type: "textarea", validator: textValidator }}
             tdStyle={{ whiteSpace: "normal" }}
             dataFormat={HTML2text}
             customInsertEditor={{ getElement: customReleaseNotes }}
@@ -225,7 +260,7 @@ class FirmwareUpgrades extends React.Component {
           </TableHeaderColumn>
           <TableHeaderColumn
             dataField="models"
-            editable={false}
+            editable={{ validator: modelValidator }}
             tdStyle={{ whiteSpace: "normal" }}
             dataFormat={formatModels}
             customInsertEditor={{ getElement: this.customFWModel }}

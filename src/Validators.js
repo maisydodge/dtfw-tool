@@ -37,6 +37,12 @@ export function textValidator(cell) {
 export function fileSizeValidator(cell) {
   const nan = isNaN(parseInt(cell, 10));
   const response = { isValid: true, notification: { type: "success", msg: "", title: "" } };
+  if (!cell) {
+    response.isValid = false;
+    response.notification.type = "error";
+    response.notification.msg = "Value must be entered!";
+    response.notification.title = "Requested Value";
+  }
   if (nan) {
     response.isValid = false;
     response.notification.type = "error";
@@ -44,4 +50,23 @@ export function fileSizeValidator(cell) {
     response.notification.title = "Invalid file size";
   }
   return response;
+}
+
+export function modelValidator(modelArray) {
+  const response = {
+    isValid: true,
+    notification: { type: "success", msg: "", title: "" }
+  };
+  let type = modelArray[0].slice(0, 3);
+  console.log(type);
+  for (var i = 0; i < modelArray.length; i++) {
+    if (modelArray[i].slice(0, 3) !== type) {
+      response.isValid = false;
+      response.notification.type = "error";
+      response.notification.msg = "Model types must be the same!";
+      response.notification.title = "Invalid Models";
+      return response;
+    }
+  }
+  return true;
 }

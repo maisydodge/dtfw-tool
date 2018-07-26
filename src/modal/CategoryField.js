@@ -1,7 +1,7 @@
 import React from "react";
 import { Dropdown } from "semantic-ui-react";
 
-import { cat_options } from "../Utils";
+import { populateCategory, dropdownHelper } from "../Utils";
 import { addNull } from "./ModalUtils";
 
 /**
@@ -10,7 +10,7 @@ import { addNull } from "./ModalUtils";
  */
 class CategoryField extends React.Component {
   state = {
-    categories: cat_options(this.props.data)
+    categories: dropdownHelper(populateCategory())
   };
 
   getFieldValue = () => {
@@ -24,7 +24,10 @@ class CategoryField extends React.Component {
   //   });
   // };
 
-  handleChange = (e, { value }) => this.setState({ currentValue: value });
+  handleChange = (e, { value }) => {
+    this.setState({ currentValue: value });
+    this.props.sendCategory(value);
+  };
 
   render() {
     const { currentValue } = this.state.categories;
