@@ -36,6 +36,8 @@ class DeviceTypes extends React.Component {
       totalSize: 0,
       page: 1,
       sizePerPage: 10,
+      filterField: null,
+      filterValue: null,
       sortName: "",
       sortOrder: "",
       searchText: ""
@@ -73,9 +75,8 @@ class DeviceTypes extends React.Component {
       body: JSON.stringify({
         action: "Read",
         pagination: { limit: size, offset: (page - 1) * size + 1 },
-        //filter: { [filterField]: filterValue },
-        sort: [{ [sortName]: sortOrder }],
-        fields: searchText
+        filter: { [filterField]: filterValue },
+        sort: [{ [sortName]: sortOrder }]
       })
     })
       .then(response => {
@@ -218,11 +219,11 @@ class DeviceTypes extends React.Component {
   }
 
   handleFilterChange(filterObj) {
-    if (Object.keys(filterObj).length === 0) {
-      this.fetchData();
+    var filterField = Object.keys(filterObj)[0];
+    if (filterField === undefined) {
+      this.fetchData(1, this.state.sizePerPage, null, null);
       return;
     }
-    var filterField = Object.keys(filterObj)[0];
     var filterValue = filterObj[filterField].value;
     this.setState({ filterField: filterField, filterValue: filterValue });
     this.fetchData(1, this.state.sizePerPage, filterField, filterValue);
