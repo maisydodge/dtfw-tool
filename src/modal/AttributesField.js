@@ -10,12 +10,12 @@ class AttributesField extends React.Component {
   state = getAttributes(this.props.data);
 
   getFieldValue = () => {
-    console.log(JSON.stringify(this.state));
+    //console.log(JSON.stringify(this.state));
     return this.state;
   };
 
   componentWillReceiveProps(nextProps) {
-    console.log("next props: " + nextProps.data);
+    //console.log("next props: " + nextProps.data);
     this.setState(getAttributes(nextProps.data));
   }
 

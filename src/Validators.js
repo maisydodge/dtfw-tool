@@ -52,13 +52,13 @@ export function fileSizeValidator(cell) {
   return response;
 }
 
+//For firmware upgrade models - makes sure types are the same
 export function modelValidator(modelArray) {
   const response = {
     isValid: true,
     notification: { type: "success", msg: "", title: "" }
   };
   let type = modelArray[0].slice(0, 3);
-  console.log(type);
   for (var i = 0; i < modelArray.length; i++) {
     if (modelArray[i].slice(0, 3) !== type) {
       response.isValid = false;

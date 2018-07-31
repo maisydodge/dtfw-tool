@@ -7,15 +7,12 @@ import BrandField from "./modal/BrandField";
 import ModelField from "./modal/ModelField";
 import AttributesField from "./modal/AttributesField";
 import PropertiesField from "./modal/PropertiesField";
-//import { customAttr } from "./modal/ModalUtils";
 
 import {
   cat_options,
   brand_options,
-  //model_options,
   defaultAttributes,
   booleanCheck,
-  allCaps,
   applyDefaults,
   filterOptions,
   onAfterInsertRow,
@@ -38,10 +35,14 @@ class DeviceTypes extends React.Component {
       model: "",
       totalSize: 0,
       page: 1,
-      sizePerPage: 10
+      sizePerPage: 10,
+      sortName: "",
+      sortOrder: "",
+      searchText: ""
     };
     this.onAddRow = this.onAddRow.bind(this);
     this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
+    this.onDeleteRow = this.onDeleteRow.bind(this);
     this.customCategory = this.customCategory.bind(this);
     this.customBrand = this.customBrand.bind(this);
     this.customModel = this.customModel.bind(this);
@@ -52,13 +53,30 @@ class DeviceTypes extends React.Component {
     this.customProps = this.customProps.bind(this);
     this.handlePageChange = this.handlePageChange.bind(this);
     this.handleSizePerPageChange = this.handleSizePerPageChange.bind(this);
+    this.handleFilterChange = this.handleFilterChange.bind(this);
+    this.handleSortChange = this.handleSortChange.bind(this);
+    this.handleSearchChange = this.handleSearchChange.bind(this);
   }
 
-  fetchData(page = this.state.page, size = this.state.sizePerPage) {
+  fetchData(
+    page = this.state.page,
+    size = this.state.sizePerPage,
+    filterField = this.state.filterField,
+    filterValue = this.state.filterValue,
+    sortName = this.state.sortName,
+    sortOrder = this.state.sortOrder,
+    searchText
+  ) {
     fetch("https://34.229.145.29/devicetypes", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "Read", pagination: { offset: 0 } })
+      body: JSON.stringify({
+        action: "Read",
+        pagination: { limit: size, offset: (page - 1) * size + 1 },
+        //filter: { [filterField]: filterValue },
+        sort: [{ [sortName]: sortOrder }],
+        fields: searchText
+      })
     })
       .then(response => {
         return response.json();
@@ -66,8 +84,10 @@ class DeviceTypes extends React.Component {
       .then(result => {
         console.log(result);
         this.setState({
-          devicetypes: result.data.documents.slice((page - 1) * size, (page - 1) * size + size),
-          totalSize: result.data.documents.length
+          devicetypes: result.data.documents,
+          totalSize: result.data.totalCount,
+          page,
+          size
         });
       });
   }
@@ -86,7 +106,7 @@ class DeviceTypes extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     //console.log("Current: " + JSON.stringify(this.state.devicetypes));
-    //console.log(this.state.devicetypes.length);
+    //console.log(this.state.totalSize);
   }
 
   /*-------------- Create -----------------*/
@@ -95,22 +115,14 @@ class DeviceTypes extends React.Component {
     docs[0] = {};
 
     for (const prop in row) {
-      if (row[prop] === undefined || row[prop] === "false") {
-        row[prop] = false;
-      }
-      if (row[prop] === "true") {
-        row[prop] = true;
-      }
+      if (row[prop] === undefined || row[prop] === "false") row[prop] = false;
+      if (row[prop] === "true") row[prop] = true;
       docs[0][prop] = row[prop];
     }
 
     docs[0].attributes = row.attributes;
 
-    console.log("Docs passed to create: " + JSON.stringify(docs));
-    //checks for duplicates (if id's are the same)
-    for (var i = 0; i < this.state.devicetypes.length; i++) {
-      if (row["_id"] === this.state.devicetypes[i]["_id"]) return;
-    }
+    //console.log("Docs passed to create: " + JSON.stringify(docs));
 
     fetch("https://34.229.145.29/devicetypes", {
       method: "POST",
@@ -125,39 +137,37 @@ class DeviceTypes extends React.Component {
       })
       .then(result => {
         console.log(result);
-        this.state.devicetypes.push(row);
-        alert(result.data.devMessage);
-        this.setState({
-          devicetypes: this.state.devicetypes
-        });
+        row["_id"] = result.data.ids[0];
+        alert(result.message);
+        this.fetchData();
       });
   }
 
   /*-------------- Update -----------------*/
-  onAfterSaveCell(row, cellName, cellValue) {
+  onAfterSaveCell(row, cellName, cellValue, page) {
     alert(`Save cell ${cellName} with value ${cellValue}`);
 
     //to make supported a boolean rather than string
     if (cellName === "supported") {
-      if (cellValue === "true") {
-        cellValue = true;
-      } else cellValue = false;
+      if (cellValue === "true") cellValue = true;
+      else cellValue = false;
     }
 
     let props = {};
     props[cellName] = cellValue;
 
+    //if model is changed, update attributes/properties
     if (cellName === "model") {
-      let updatedAttributes = getAttributes(row);
+      let updatedAttributes = getAttributes(row, cellValue);
       props.attributes = updatedAttributes;
-      let updatedProperties = updateProperties(row);
+      let updatedProperties = updateProperties(row, cellValue);
       let updatedPropKeys = Object.keys(updatedProperties);
       for (var i = 0; i < updatedPropKeys.length; i++) {
         props[updatedPropKeys[i]] = updatedProperties[updatedPropKeys[i]];
       }
     }
 
-    console.log("props to update" + JSON.stringify(props));
+    //console.log("props to update" + JSON.stringify(props));
 
     fetch("https://34.229.145.29/devicetypes", {
       method: "POST",
@@ -173,17 +183,14 @@ class DeviceTypes extends React.Component {
       })
       .then(result => {
         console.log(result);
-        alert(result.data.devMessage);
-        this.setState({
-          devicetypes: this.state.devicetypes
-        });
+        alert(result.message);
+        this.fetchData();
       });
   }
 
   /*-------------- Delete -----------------*/
   onDeleteRow(rows, fullrows) {
     var deleted = [];
-    console.log(fullrows);
 
     for (var i = 0; i < fullrows.length; i++) {
       deleted.push(fullrows[i]["_id"]);
@@ -205,8 +212,41 @@ class DeviceTypes extends React.Component {
         })
         .then(result => {
           console.log(result);
+          this.fetchData();
         });
     }
+  }
+
+  handleFilterChange(filterObj) {
+    if (Object.keys(filterObj).length === 0) {
+      this.fetchData();
+      return;
+    }
+    var filterField = Object.keys(filterObj)[0];
+    var filterValue = filterObj[filterField].value;
+    this.setState({ filterField: filterField, filterValue: filterValue });
+    this.fetchData(1, this.state.sizePerPage, filterField, filterValue);
+  }
+
+  handleSortChange(sortName, sortOrder) {
+    this.setState({ sortName: sortName, sortOrder: sortOrder });
+    this.fetchData(1, this.state.sizePerPage, undefined, undefined, sortName, sortOrder);
+  }
+
+  handleSearchChange(searchText, colInfos, multiColumnSearch) {
+    if (searchText.trim() === "") {
+      this.fetchData();
+      return;
+    }
+    this.fetchData(
+      1,
+      this.state.sizePerPage,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      searchText
+    );
   }
 
   getCategory(val) {
@@ -229,7 +269,13 @@ class DeviceTypes extends React.Component {
     return <BrandField sendBrand={this.getBrand} data={this.state.category} ref={attr.ref} />;
   }
   customModel(column, attr, editorClass, ignoreEditable, defaultValue) {
-    return <ModelField sendModel={this.getModel} data={this.state.brand} ref={attr.ref} />;
+    return (
+      <ModelField
+        sendModel={this.getModel}
+        data={{ category: this.state.category, brand: this.state.brand }}
+        ref={attr.ref}
+      />
+    );
   }
   customAttr(column, attr, editorClass, ignoreEditable, defaultValue) {
     return (
@@ -281,10 +327,12 @@ class DeviceTypes extends React.Component {
       onAddRow: this.onAddRow,
       searchDelayTime: 1000,
       onDeleteRow: this.onDeleteRow,
+      onFilterChange: this.handleFilterChange,
+      onSortChange: this.handleSortChange,
       onPageChange: this.handlePageChange,
       onSizePerPageList: this.handleSizePerPageChange,
-      page: this.state.page,
-      sizePerPage: this.state.sizePerPage
+      onSearchChange: this.handleSearchChange,
+      clearSearch: true
     };
     const keyBoardNav = {
       enterToEdit: true
@@ -329,6 +377,7 @@ class DeviceTypes extends React.Component {
           remote
           keyBoardNav={keyBoardNav}
           hover
+          multiColumnSearch
         >
           <TableHeaderColumn
             dataField="category"
@@ -338,10 +387,11 @@ class DeviceTypes extends React.Component {
               options: { values: populateCategory },
               validator: selectValidator
             }}
+            dataSort={true}
             customInsertEditor={{ getElement: this.customCategory }}
             filter={{
               type: "SelectFilter",
-              options: filterOptions(cat_options(this.state.devicetypes))
+              options: filterOptions(cat_options())
             }}
           >
             Category
@@ -354,10 +404,11 @@ class DeviceTypes extends React.Component {
               options: { values: populateBrand },
               validator: selectValidator
             }}
+            dataSort={true}
             customInsertEditor={{ getElement: this.customBrand }}
             filter={{
               type: "SelectFilter",
-              options: filterOptions(brand_options(this.state.devicetypes))
+              options: filterOptions(brand_options())
             }}
           >
             Brand
@@ -371,6 +422,7 @@ class DeviceTypes extends React.Component {
               validator: selectValidator
             }}
             customInsertEditor={{ getElement: this.customModel }}
+            dataSort={true}
           >
             Model
           </TableHeaderColumn>
@@ -408,8 +460,6 @@ class DeviceTypes extends React.Component {
             expandable={false}
             hidden
             editable={{ type: "textarea", placeholder: "Type" }}
-            dataFormat={allCaps}
-            isKey={true}
             customInsertEditor={{ getElement: this.customProps }}
           >
             Type
@@ -456,7 +506,7 @@ class DeviceTypes extends React.Component {
             hidden
             editable={false}
             customInsertEditor={{ getElement: this.customAttr }}
-            //customInsertEditor={{ getElement: customAttr }}
+            isKey={true}
           >
             Attributes
           </TableHeaderColumn>

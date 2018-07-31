@@ -51,7 +51,6 @@ class PropertiesField extends React.Component {
             name="ovrcPro"
             checked={this.state.ovrcPro}
             label="OvrC Pro"
-            value={false}
             disabled
           />
           <br />

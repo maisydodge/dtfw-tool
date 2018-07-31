@@ -14,20 +14,37 @@ class FirmwareUpgrades extends React.Component {
       firmwareupgrades: [],
       totalSize: 0,
       page: 1,
-      sizePerPage: 10
+      sizePerPage: 10,
+      sortName: "",
+      sortOrder: "",
+      searchText: ""
     };
     this.onAddRow = this.onAddRow.bind(this);
-    this.onAfterSaveCell = this.onAfterSaveCell;
+    this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
+    this.onDeleteRow = this.onDeleteRow.bind(this);
     this.customFWModel = this.customFWModel.bind(this);
     this.handlePageChange = this.handlePageChange.bind(this);
     this.handleSizePerPageChange = this.handleSizePerPageChange.bind(this);
+    this.handleSortChange = this.handleSortChange.bind(this);
+    this.handleSearchChange = this.handleSearchChange.bind(this);
   }
 
-  fetchData(page = this.state.page, size = this.state.sizePerPage) {
+  fetchData(
+    page = this.state.page,
+    size = this.state.sizePerPage,
+    sortName = this.state.sortName,
+    sortOrder = this.state.sortOrder,
+    searchText
+  ) {
     fetch("https://34.229.145.29/firmware", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "Read", pagination: { offset: 0 } })
+      body: JSON.stringify({
+        action: "Read",
+        pagination: { limit: size, offset: (page - 1) * size + 1 },
+        sort: [{ [sortName]: sortOrder }],
+        fields: searchText
+      })
     })
       .then(response => {
         return response.json();
@@ -35,13 +52,17 @@ class FirmwareUpgrades extends React.Component {
       .then(result => {
         console.log(result);
         this.setState({
-          firmwareupgrades: result.data.documents.slice(
-            (page - 1) * size,
-            (page - 1) * size + size
-          ),
-          totalSize: result.data.documents.length
+          firmwareupgrades: result.data.documents,
+          totalSize: result.data.totalCount,
+          page,
+          size
         });
       });
+  }
+
+  handleSortChange(sortName, sortOrder) {
+    this.setState({ sortName: sortName, sortOrder: sortOrder });
+    this.fetchData(1, this.state.sizePerPage, undefined, undefined, sortName, sortOrder);
   }
 
   handlePageChange(page, sizePerPage) {
@@ -50,6 +71,14 @@ class FirmwareUpgrades extends React.Component {
 
   handleSizePerPageChange(sizePerPage) {
     this.fetchData(1, sizePerPage);
+  }
+
+  handleSearchChange(searchText, colInfos, multiColumnSearch) {
+    if (searchText.trim() === "") {
+      this.fetchData();
+      return;
+    }
+    this.fetchData(1, this.state.sizePerPage, undefined, undefined, searchText);
   }
 
   componentWillMount() {
@@ -85,12 +114,10 @@ class FirmwareUpgrades extends React.Component {
       })
       .then(result => {
         console.log(result);
+        row["_id"] = result.data.ids[0];
         this.state.firmwareupgrades.push(row);
-        console.log(row);
-        alert(result.data.devMessage);
-        this.setState({
-          firmwareupgrades: this.state.firmwareupgrades
-        });
+        alert(result.message);
+        this.fetchData();
       });
   }
 
@@ -120,10 +147,8 @@ class FirmwareUpgrades extends React.Component {
       })
       .then(result => {
         console.log(result);
-        alert(result.data.devMessage);
-        this.setState({
-          firmwareupgrades: this.state.firmwareupgrades
-        });
+        alert(result.message);
+        this.fetchData();
       });
   }
 
@@ -156,6 +181,7 @@ class FirmwareUpgrades extends React.Component {
         })
         .then(result => {
           console.log(result);
+          this.fetchData();
         });
     }
   }
@@ -172,8 +198,9 @@ class FirmwareUpgrades extends React.Component {
       searchDelayTime: 1000,
       onPageChange: this.handlePageChange,
       onSizePerPageList: this.handleSizePerPageChange,
-      page: this.state.page,
-      sizePerPage: this.state.sizePerPage
+      onSortChange: this.handleSortChange,
+      onSearchChange: this.handleSearchChange,
+      clearSearch: true
     };
     const keyBoardNav = {
       enterToEdit: true
@@ -209,6 +236,7 @@ class FirmwareUpgrades extends React.Component {
           pagination
           fetchInfo={{ dataTotalSize: this.state.totalSize }}
           remote
+          multiColumnSearch
         >
           <TableHeaderColumn
             dataField="url"
@@ -219,6 +247,7 @@ class FirmwareUpgrades extends React.Component {
             }}
             tdStyle={{ whiteSpace: "normal" }}
             width={"250"}
+            isKey={true}
           >
             URL
           </TableHeaderColumn>
@@ -238,7 +267,8 @@ class FirmwareUpgrades extends React.Component {
             dataField="releaseDate"
             editable={{ type: "date", validator: selectValidator }}
             dataFormat={formatDate}
-            width={"120"}
+            width={"130"}
+            dataSort={true}
           >
             Release Date
           </TableHeaderColumn>
@@ -264,6 +294,7 @@ class FirmwareUpgrades extends React.Component {
             tdStyle={{ whiteSpace: "normal" }}
             dataFormat={formatModels}
             customInsertEditor={{ getElement: this.customFWModel }}
+            dataSort={true}
           >
             Models
           </TableHeaderColumn>
@@ -310,7 +341,6 @@ class FirmwareUpgrades extends React.Component {
               validator: textValidator,
               placeholder: "Enter Firmware Version"
             }}
-            isKey={true}
           >
             Firmware Version
           </TableHeaderColumn>

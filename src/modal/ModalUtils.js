@@ -3,6 +3,7 @@ import ReleaseNotesField from "./ReleaseNotesField";
 import PrerequisitesField from "./PrerequisitesField";
 import FWAttributesField from "./FWAttributesField";
 import AttributesField from "./AttributesField";
+
 // import CategoryField from "./CategoryField";
 // import BrandField from "./BrandField";
 // import ModelField from "./ModelField";
