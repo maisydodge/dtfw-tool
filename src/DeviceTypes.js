@@ -230,7 +230,6 @@ class DeviceTypes extends React.Component {
   }
 
   handleSortChange(sortName, sortOrder) {
-    console.log(sortOrder);
     this.setState({ sortName: sortName, sortOrder: sortOrder });
     this.fetchData(1, this.state.sizePerPage, undefined, sortName, sortOrder);
   }
