@@ -64,6 +64,7 @@ class DeviceTypes extends React.Component {
     sortName = this.state.sortName,
     sortOrder = this.state.sortOrder
   ) {
+    console.log(sortOrder);
     fetch("https://34.229.145.29/devicetypes", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -230,8 +231,9 @@ class DeviceTypes extends React.Component {
   }
 
   handleSortChange(sortName, sortOrder) {
+    console.log(sortOrder);
     this.setState({ sortName: sortName, sortOrder: sortOrder });
-    this.fetchData(1, this.state.sizePerPage, undefined, undefined, sortName, sortOrder);
+    this.fetchData(1, this.state.sizePerPage, undefined, sortName, sortOrder);
   }
 
   getCategory(val) {
