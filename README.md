@@ -16,13 +16,13 @@ This tool consists of two main tables - Device Types and Firmware Upgrades - and
 be navigated between using the two tabs at the top([React-Tabs](https://github.com/reactjs/react-tabs)). 
 Both tables feature server-side pagination (page numbers and navigation arrows are located under the tables on the right side), as well
 as the ability to delete a row from the table by selecting the little checkbox on the far left
-of the desired row and clicking the orange delete button. The search feature is not remote, so
+of the desired row (thus highlighting the row in pink) and clicking the orange delete button. The search feature is not remote, so
 searching only parses through the device types or firmware upgrades on the current page.
 
 ## Device Types
 
 The following fields are editable directly on the table by simply clicking on the cell: Category, Brand, Model, Firmware Version, Platform, and Supported. To save the edited cell, you must click 'Enter' on the keyboard and then
-selected 'Ok' on the pop-up.
+select 'Ok' on the pop-up.
 
 1.  Category: Category dropdown containing all of the possible categories in catalog.js.
 2.  Brand: Brand dropdown containing the brand options that correspond to the already selected category in the catalog.
