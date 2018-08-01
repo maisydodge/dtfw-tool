@@ -6,14 +6,15 @@ npm start
 
 # Resources
 
-[Create React App](https://github.com/facebookincubator/create-react-app).
+[Create React App](https://github.com/facebookincubator/create-react-app)
+
 [React Bootstrap Table](https://github.com/AllenFang/react-bootstrap-table)
 
 # Description
 
 This tool consists of two main tables - Device Types and Firmware Upgrades - and can
-be navigated to using the two tabs at the top. Both tables feature server-side pagination
-(page numbers and navigation arrows are located under the tables on the right side), as well
+be navigated between using the two tabs at the top([React-Tabs](https://github.com/reactjs/react-tabs)). 
+Both tables feature server-side pagination (page numbers and navigation arrows are located under the tables on the right side), as well
 as the ability to delete a row from the table by selecting the little checkbox on the far left
 of the desired row and clicking the orange delete button. The search feature is not remote, so
 searching only parses through the device types or firmware upgrades on the current page.
