@@ -36,11 +36,9 @@ class DeviceTypes extends React.Component {
       totalSize: 0,
       page: 1,
       sizePerPage: 10,
-      filterField: null,
-      filterValue: null,
+      filter: null,
       sortName: "",
-      sortOrder: "",
-      searchText: ""
+      sortOrder: ""
     };
     this.onAddRow = this.onAddRow.bind(this);
     this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
@@ -57,17 +55,14 @@ class DeviceTypes extends React.Component {
     this.handleSizePerPageChange = this.handleSizePerPageChange.bind(this);
     this.handleFilterChange = this.handleFilterChange.bind(this);
     this.handleSortChange = this.handleSortChange.bind(this);
-    this.handleSearchChange = this.handleSearchChange.bind(this);
   }
 
   fetchData(
     page = this.state.page,
     size = this.state.sizePerPage,
-    filterField = this.state.filterField,
-    filterValue = this.state.filterValue,
+    filter = this.state.filterField,
     sortName = this.state.sortName,
-    sortOrder = this.state.sortOrder,
-    searchText
+    sortOrder = this.state.sortOrder
   ) {
     fetch("https://34.229.145.29/devicetypes", {
       method: "POST",
@@ -75,7 +70,7 @@ class DeviceTypes extends React.Component {
       body: JSON.stringify({
         action: "Read",
         pagination: { limit: size, offset: (page - 1) * size + 1 },
-        filter: { [filterField]: filterValue },
+        filter: filter,
         sort: [{ [sortName]: sortOrder }]
       })
     })
@@ -191,6 +186,7 @@ class DeviceTypes extends React.Component {
 
   /*-------------- Delete -----------------*/
   onDeleteRow(rows, fullrows) {
+    console.log(fullrows);
     var deleted = [];
 
     for (var i = 0; i < fullrows.length; i++) {
@@ -219,35 +215,23 @@ class DeviceTypes extends React.Component {
   }
 
   handleFilterChange(filterObj) {
-    var filterField = Object.keys(filterObj)[0];
-    if (filterField === undefined) {
+    var filter = {};
+    var filterFields = Object.keys(filterObj);
+    if (filterFields === undefined) {
       this.fetchData(1, this.state.sizePerPage, null, null);
       return;
     }
-    var filterValue = filterObj[filterField].value;
-    this.setState({ filterField: filterField, filterValue: filterValue });
-    this.fetchData(1, this.state.sizePerPage, filterField, filterValue);
+    for (var i = 0; i < filterFields.length; i++) {
+      filter[filterFields[i]] = filterObj[filterFields[i]].value;
+    }
+
+    this.setState({ filterField: filter });
+    this.fetchData(1, this.state.sizePerPage, filter);
   }
 
   handleSortChange(sortName, sortOrder) {
     this.setState({ sortName: sortName, sortOrder: sortOrder });
     this.fetchData(1, this.state.sizePerPage, undefined, undefined, sortName, sortOrder);
-  }
-
-  handleSearchChange(searchText, colInfos, multiColumnSearch) {
-    if (searchText.trim() === "") {
-      this.fetchData();
-      return;
-    }
-    this.fetchData(
-      1,
-      this.state.sizePerPage,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      searchText
-    );
   }
 
   getCategory(val) {
@@ -320,6 +304,16 @@ class DeviceTypes extends React.Component {
     return <div> {content} </div>;
   }
 
+  remote(remoteObj) {
+    remoteObj.cellEdit = true;
+    remoteObj.insertRow = true;
+    remoteObj.dropRow = true;
+    remoteObj.pagination = true;
+    remoteObj.filter = true;
+    remoteObj.sort = true;
+    return remoteObj;
+  }
+
   render() {
     const options = {
       expandRowBgColor: "#aa66cc",
@@ -332,7 +326,6 @@ class DeviceTypes extends React.Component {
       onSortChange: this.handleSortChange,
       onPageChange: this.handlePageChange,
       onSizePerPageList: this.handleSizePerPageChange,
-      onSearchChange: this.handleSearchChange,
       clearSearch: true
     };
     const keyBoardNav = {
@@ -375,10 +368,9 @@ class DeviceTypes extends React.Component {
           search
           pagination
           fetchInfo={{ dataTotalSize: this.state.totalSize }}
-          remote
+          remote={this.remote}
           keyBoardNav={keyBoardNav}
           hover
-          multiColumnSearch
         >
           <TableHeaderColumn
             dataField="category"

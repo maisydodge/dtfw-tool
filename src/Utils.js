@@ -65,9 +65,7 @@ export function populateModel(row) {
   let types = Object.keys(catalog[category][brand]);
   for (var i = 0; i < types.length; i++) {
     let models = catalog[category][brand][types[i]].models;
-    for (var j = 0; j < models.length; j++) {
-      if (models[j] !== "") model_options.push(models[j]);
-    }
+    model_options = models;
   }
   return model_options;
 }

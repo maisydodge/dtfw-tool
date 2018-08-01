@@ -58,15 +58,22 @@ export function modelValidator(modelArray) {
     isValid: true,
     notification: { type: "success", msg: "", title: "" }
   };
-  let type = modelArray[0].slice(0, 3);
-  for (var i = 0; i < modelArray.length; i++) {
-    if (modelArray[i].slice(0, 3) !== type) {
-      response.isValid = false;
-      response.notification.type = "error";
-      response.notification.msg = "Model types must be the same!";
-      response.notification.title = "Invalid Models";
-      return response;
+  if (modelArray[0] === undefined) {
+    response.isValid = false;
+    response.notification.type = "error";
+    response.notification.msg = "Value must be selected!";
+    response.notification.title = "Requested Value";
+  } else {
+    let type = modelArray[0].slice(0, 3);
+    for (var i = 0; i < modelArray.length; i++) {
+      if (modelArray[i].slice(0, 3) !== type) {
+        response.isValid = false;
+        response.notification.type = "error";
+        response.notification.msg = "Model types must be the same!";
+        response.notification.title = "Invalid Models";
+        return response;
+      }
     }
   }
-  return true;
+  return response;
 }

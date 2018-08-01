@@ -16,8 +16,7 @@ class FirmwareUpgrades extends React.Component {
       page: 1,
       sizePerPage: 10,
       sortName: "",
-      sortOrder: "",
-      searchText: ""
+      sortOrder: ""
     };
     this.onAddRow = this.onAddRow.bind(this);
     this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
@@ -26,15 +25,13 @@ class FirmwareUpgrades extends React.Component {
     this.handlePageChange = this.handlePageChange.bind(this);
     this.handleSizePerPageChange = this.handleSizePerPageChange.bind(this);
     this.handleSortChange = this.handleSortChange.bind(this);
-    this.handleSearchChange = this.handleSearchChange.bind(this);
   }
 
   fetchData(
     page = this.state.page,
     size = this.state.sizePerPage,
     sortName = this.state.sortName,
-    sortOrder = this.state.sortOrder,
-    searchText
+    sortOrder = this.state.sortOrder
   ) {
     fetch("https://34.229.145.29/firmware", {
       method: "POST",
@@ -42,8 +39,7 @@ class FirmwareUpgrades extends React.Component {
       body: JSON.stringify({
         action: "Read",
         pagination: { limit: size, offset: (page - 1) * size + 1 },
-        sort: [{ [sortName]: sortOrder }],
-        fields: searchText
+        sort: [{ [sortName]: sortOrder }]
       })
     })
       .then(response => {
@@ -71,14 +67,6 @@ class FirmwareUpgrades extends React.Component {
 
   handleSizePerPageChange(sizePerPage) {
     this.fetchData(1, sizePerPage);
-  }
-
-  handleSearchChange(searchText, colInfos, multiColumnSearch) {
-    if (searchText.trim() === "") {
-      this.fetchData();
-      return;
-    }
-    this.fetchData(1, this.state.sizePerPage, undefined, undefined, searchText);
   }
 
   componentWillMount() {
@@ -190,6 +178,16 @@ class FirmwareUpgrades extends React.Component {
     return <FWModelField data={this.state.firmwareupgrades} ref={attr.ref} />;
   }
 
+  remote(remoteObj) {
+    remoteObj.cellEdit = true;
+    remoteObj.insertRow = true;
+    remoteObj.dropRow = true;
+    remoteObj.pagination = true;
+    remoteObj.filter = true;
+    remoteObj.sort = true;
+    return remoteObj;
+  }
+
   render() {
     const options = {
       afterInsertRow: onAfterInsertRow,
@@ -199,7 +197,6 @@ class FirmwareUpgrades extends React.Component {
       onPageChange: this.handlePageChange,
       onSizePerPageList: this.handleSizePerPageChange,
       onSortChange: this.handleSortChange,
-      onSearchChange: this.handleSearchChange,
       clearSearch: true
     };
     const keyBoardNav = {
@@ -235,8 +232,7 @@ class FirmwareUpgrades extends React.Component {
           search
           pagination
           fetchInfo={{ dataTotalSize: this.state.totalSize }}
-          remote
-          multiColumnSearch
+          remote={this.remote}
         >
           <TableHeaderColumn
             dataField="url"
