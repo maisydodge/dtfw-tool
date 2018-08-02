@@ -63,7 +63,6 @@ export function populateModel(row) {
   let model_options = [];
 
   let types = Object.keys(catalog[category][brand]);
-  console.log("types: " + types);
   for (var i = 0; i < types.length; i++) {
     let models = catalog[category][brand][types[i]].models;
     for (var j = 0; j < models.length; j++) {
@@ -101,8 +100,14 @@ export function fillDropBrand(category) {
  *            If no category or brand is selected, all models are provided
  */
 export function fillDropModel(data) {
-  let category = data.category;
-  let brand = data.brand;
+  var category = "";
+  var brand = "";
+  if (data !== undefined) {
+    category = data.category;
+    brand = data.brand;
+  }
+  // let category = data.category;
+  // let brand = data.brand;
   let model_options = [];
 
   let categories = Object.keys(catalog);
@@ -122,22 +127,8 @@ export function fillDropModel(data) {
       }
     }
   }
-  return model_options;
-}
-
-/**
- * Summary: Returns the options for the firmware model dropdown on the insert modal
- *    @param data, this.state.firmwareupgrades
- *    @return options
- */
-export function fwmodel_options(data) {
-  var options = [];
-  for (var i = 0; i < data.length; i++) {
-    for (var j = 0; j < data[i].models.length; j++) {
-      options.push(data[i].models[j]);
-    }
-  }
-  return dropdownHelper(options);
+  if (data !== undefined) return model_options;
+  return dropdownHelper(model_options);
 }
 
 /**
@@ -176,7 +167,6 @@ export function getAttributes(data, cellValue) {
         catalog[category][brand][types[i]].overrideAttributes !== undefined
       ) {
         let new_attributes = Object.keys(catalog[category][brand][types[i]].overrideAttributes);
-        console.log("new attributes: " + new_attributes);
         let current_attributes = Object.keys(props);
         for (var k = 0; k < new_attributes.length; k++) {
           for (var m = 0; m < current_attributes.length; m++) {

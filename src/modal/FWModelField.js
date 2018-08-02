@@ -1,7 +1,7 @@
 import React from "react";
 import { Dropdown } from "semantic-ui-react";
 
-import { fwmodel_options } from "../Utils";
+import { fillDropModel } from "../Utils";
 import { addNull } from "./ModalUtils";
 
 /**
@@ -10,7 +10,7 @@ import { addNull } from "./ModalUtils";
  */
 class FWModelField extends React.Component {
   state = {
-    models: fwmodel_options(this.props.data),
+    models: fillDropModel(),
     selected: []
   };
 

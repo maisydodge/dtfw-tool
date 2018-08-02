@@ -155,7 +155,6 @@ class DeviceTypes extends React.Component {
     //if model is changed, update attributes/properties
     if (cellName === "model") {
       let updatedAttributes = getAttributes(row, cellValue);
-      console.log("attributes: " + JSON.stringify(updatedAttributes));
       props.attributes = updatedAttributes;
       let updatedProperties = updateProperties(row, cellValue);
       let updatedPropKeys = Object.keys(updatedProperties);

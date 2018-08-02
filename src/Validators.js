@@ -1,3 +1,5 @@
+import catalog from "./catalog.js";
+
 /*------------ Validators ------------ */
 
 /**
@@ -52,6 +54,32 @@ export function fileSizeValidator(cell) {
   return response;
 }
 
+// //For firmware upgrade models - makes sure types are the same
+// export function modelValidator(modelArray) {
+//   const response = {
+//     isValid: true,
+//     notification: { type: "success", msg: "", title: "" }
+//   };
+//   if (modelArray[0] === undefined) {
+//     response.isValid = false;
+//     response.notification.type = "error";
+//     response.notification.msg = "Value must be selected!";
+//     response.notification.title = "Requested Value";
+//   } else {
+//     let type = modelArray[0].slice(0, 3);
+//     for (var i = 0; i < modelArray.length; i++) {
+//       if (modelArray[i].slice(0, 3) !== type) {
+//         response.isValid = false;
+//         response.notification.type = "error";
+//         response.notification.msg = "Model types must be the same!";
+//         response.notification.title = "Invalid Models";
+//         return response;
+//       }
+//     }
+//   }
+//   return response;
+// }
+
 //For firmware upgrade models - makes sure types are the same
 export function modelValidator(modelArray) {
   const response = {
@@ -64,9 +92,25 @@ export function modelValidator(modelArray) {
     response.notification.msg = "Value must be selected!";
     response.notification.title = "Requested Value";
   } else {
-    let type = modelArray[0].slice(0, 3);
-    for (var i = 0; i < modelArray.length; i++) {
-      if (modelArray[i].slice(0, 3) !== type) {
+    let categories = Object.keys(catalog);
+    for (let i = 0; i < categories.length; i++) {
+      let brands = Object.keys(catalog[categories[i]]);
+      for (let j = 0; j < brands.length; j++) {
+        let types = Object.keys(catalog[categories[i]][brands[j]]);
+        for (let k = 0; k < types.length; k++) {
+          let models = catalog[categories[i]][brands[j]][types[k]].models;
+          for (let m = 0; m < models.length; m++) {
+            for (let n = 0; n < modelArray.length; n++) {
+              if (models[m] === modelArray[n]) {
+                var currentModels = models;
+              }
+            }
+          }
+        }
+      }
+    }
+    for (let z = 0; z < modelArray.length; z++) {
+      if (currentModels.includes(modelArray[z]) === false) {
         response.isValid = false;
         response.notification.type = "error";
         response.notification.msg = "Model types must be the same!";

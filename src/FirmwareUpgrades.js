@@ -149,7 +149,6 @@ class FirmwareUpgrades extends React.Component {
       console.log(fullrows[i]);
       deleted.push(fullrows[i]["_id"]);
     }
-    console.log("Deleted: " + deleted);
 
     if (
       window.confirm(
