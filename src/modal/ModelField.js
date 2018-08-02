@@ -36,9 +36,7 @@ class ModelField extends React.Component {
   render() {
     const { currentValue } = this.state.models;
 
-    if (this.state.models[this.state.models.length - 1].value !== "") {
-      addNull(this.state.models);
-    }
+    addNull(this.state.models);
 
     return (
       <Dropdown

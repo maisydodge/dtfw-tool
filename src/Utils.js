@@ -63,9 +63,12 @@ export function populateModel(row) {
   let model_options = [];
 
   let types = Object.keys(catalog[category][brand]);
+  console.log("types: " + types);
   for (var i = 0; i < types.length; i++) {
     let models = catalog[category][brand][types[i]].models;
-    model_options = models;
+    for (var j = 0; j < models.length; j++) {
+      model_options.push(models[j]);
+    }
   }
   return model_options;
 }
@@ -161,6 +164,9 @@ export function getAttributes(data, cellValue) {
   if (model === "") {
     return props;
   }
+  if (catalog[category][brand] === undefined) {
+    return props;
+  }
   let types = Object.keys(catalog[category][brand]);
   for (let i = 0; i < types.length; i++) {
     let models = catalog[category][brand][types[i]].models;
@@ -170,6 +176,7 @@ export function getAttributes(data, cellValue) {
         catalog[category][brand][types[i]].overrideAttributes !== undefined
       ) {
         let new_attributes = Object.keys(catalog[category][brand][types[i]].overrideAttributes);
+        console.log("new attributes: " + new_attributes);
         let current_attributes = Object.keys(props);
         for (var k = 0; k < new_attributes.length; k++) {
           for (var m = 0; m < current_attributes.length; m++) {
@@ -232,6 +239,9 @@ export function getProperties(data, name) {
   let model = data.model;
 
   if (model === "") {
+    return prop;
+  }
+  if (catalog[category][brand] === undefined) {
     return prop;
   }
   let types = Object.keys(catalog[category][brand]);

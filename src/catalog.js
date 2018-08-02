@@ -213,7 +213,7 @@ export default {
       NVR: {
         label: "NVR",
         overrideAttributes: {
-          webConnect: false
+          webconnect: false
         },
         models: [
           "LUM-500-NVR-4CH",
@@ -243,7 +243,7 @@ export default {
       CAMERA: {
         label: "Camera",
         overrideAttributes: {
-          webConnect: false
+          webconnect: false
         },
         models: [
           "LUM-300-BUL-IP-GR",
