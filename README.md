@@ -28,7 +28,7 @@ select 'Ok' on the pop-up.
 2.  Brand: Brand dropdown containing the brand options that correspond to the already selected category in the catalog.
 3.  Model: Model dropdown containing the model options that correspond to the selected category and brand in the catalog.
 4.  Firmware Version: Text area
-5.  Platform: Options text area
+5.  Platform: Optional text area
 6.  Supported: True/false checkbox
 
 On the far left of each row is a column containing '(+)'. When this is clicked, a sub-table (outlined in purple) appears underneated the current row. This table, called 'Attributes Table,' displayed the uneditable properties of each device type. To close the Attirubtes Table, simply clicked the '(-)'. When the model is edited, the uneditable
@@ -50,7 +50,7 @@ selected 'Ok' on the pop-up.
 2.  File Size: Number input
 3.  Release Date: Calendar select
 4.  Release Notes: Text area. The Release Notes appear as a bulleted list. When editing, no need to input HTML; the input will automatically be translated to an HTML list, with a newline indicated a new list item (bullet)
-5.  Platform: Options text area
+5.  Platform: Optional text area
 6.  Models: Not editable
 
 The Release Date and Models columns have the ability to be sorted by clicking the little arrows at the column header.
