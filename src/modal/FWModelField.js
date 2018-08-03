@@ -23,9 +23,14 @@ class FWModelField extends React.Component {
   //     options: [{ text: value, value }, ...]
   //   });
   // };
+  handleChange = (e, { value }) => {
+    this.setState({ currentValue: value });
+    this.props.sendBrand(value);
+  };
 
   handleChange = (e, { value }) => {
     this.setState({ selected: value });
+    this.props.sendModel(value);
   };
 
   render() {

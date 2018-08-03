@@ -2,6 +2,7 @@ import React from "react";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import { customReleaseNotes, customPrereq, customFWAttr } from "./modal/ModalUtils";
 import FWModelField from "./modal/FWModelField";
+import FirmwareType from "./modal/FirmwareType";
 
 import { formatModels, formatDate, HTML2text, allCaps, onAfterInsertRow, text2HTML } from "./Utils";
 
@@ -12,6 +13,7 @@ class FirmwareUpgrades extends React.Component {
     super();
     this.state = {
       firmwareupgrades: [],
+      model: "",
       totalSize: 0,
       page: 1,
       sizePerPage: 10,
@@ -21,7 +23,9 @@ class FirmwareUpgrades extends React.Component {
     this.onAddRow = this.onAddRow.bind(this);
     this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
     this.onDeleteRow = this.onDeleteRow.bind(this);
+    this.getModel = this.getModel.bind(this);
     this.customFWModel = this.customFWModel.bind(this);
+    this.customFWType = this.customFWType.bind(this);
     this.handlePageChange = this.handlePageChange.bind(this);
     this.handleSizePerPageChange = this.handleSizePerPageChange.bind(this);
     this.handleSortChange = this.handleSortChange.bind(this);
@@ -173,8 +177,17 @@ class FirmwareUpgrades extends React.Component {
     }
   }
 
+  getModel(val) {
+    this.setState({ model: val });
+  }
+
   customFWModel(column, attr, editorClass, ignoreEditable, defaultValue) {
-    return <FWModelField data={this.state.firmwareupgrades} ref={attr.ref} />;
+    return (
+      <FWModelField sendModel={this.getModel} data={this.state.firmwareupgrades} ref={attr.ref} />
+    );
+  }
+  customFWType(column, attr, editorClass, ignoreEditable, defaultValue) {
+    return <FirmwareType data={this.state.model} ref={attr.ref} />;
   }
 
   remote(remoteObj) {
@@ -312,6 +325,7 @@ class FirmwareUpgrades extends React.Component {
               placeholder: "Enter Device Type"
             }}
             dataFormat={allCaps}
+            customInsertEditor={{ getElement: this.customFWType }}
           >
             Device Type
           </TableHeaderColumn>

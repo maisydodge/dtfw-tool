@@ -83,11 +83,12 @@ export function modelValidator(modelArray) {
         }
       }
     }
+
     for (let z = 0; z < modelArray.length; z++) {
       if (currentModels.includes(modelArray[z]) === false) {
         response.isValid = false;
         response.notification.type = "error";
-        response.notification.msg = "Model types must be the same!";
+        response.notification.msg = "Model device types must be the same!";
         response.notification.title = "Invalid Models";
         return response;
       }

@@ -106,8 +106,7 @@ export function fillDropModel(data) {
     category = data.category;
     brand = data.brand;
   }
-  // let category = data.category;
-  // let brand = data.brand;
+
   let model_options = [];
 
   let categories = Object.keys(catalog);
@@ -129,6 +128,23 @@ export function fillDropModel(data) {
   }
   if (data !== undefined) return model_options;
   return dropdownHelper(model_options);
+}
+
+export function getType(modelArray) {
+  let categories = Object.keys(catalog);
+  for (let i = 0; i < categories.length; i++) {
+    let brands = Object.keys(catalog[categories[i]]);
+    for (let j = 0; j < brands.length; j++) {
+      let types = Object.keys(catalog[categories[i]][brands[j]]);
+      for (let k = 0; k < types.length; k++) {
+        let models = catalog[categories[i]][brands[j]][types[k]].models;
+        if (models.includes(modelArray[0])) {
+          var currentType = types[k];
+        }
+      }
+    }
+  }
+  return currentType;
 }
 
 /**
