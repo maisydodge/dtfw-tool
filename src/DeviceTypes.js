@@ -55,6 +55,7 @@ class DeviceTypes extends React.Component {
     this.handleSizePerPageChange = this.handleSizePerPageChange.bind(this);
     this.handleFilterChange = this.handleFilterChange.bind(this);
     this.handleSortChange = this.handleSortChange.bind(this);
+    this.handleSync = this.handleSync.bind(this);
   }
 
   fetchData(
@@ -288,6 +289,12 @@ class DeviceTypes extends React.Component {
     );
   }
 
+  handleSync() {
+    if (window.confirm("Are you sure you want to sync to all the environments?")) {
+      //call to server
+    }
+  }
+
   /*----- Expand functions -----*/
   isExpandableRow(row) {
     return true;
@@ -504,7 +511,7 @@ class DeviceTypes extends React.Component {
             Attributes
           </TableHeaderColumn>
         </BootstrapTable>
-        <button type="button" className="btn btn-warning btn-lg">
+        <button type="button" className="btn btn-warning btn-lg" onClick={this.handleSync}>
           Sync To Environments
         </button>
       </div>

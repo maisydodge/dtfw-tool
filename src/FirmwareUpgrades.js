@@ -29,6 +29,7 @@ class FirmwareUpgrades extends React.Component {
     this.handlePageChange = this.handlePageChange.bind(this);
     this.handleSizePerPageChange = this.handleSizePerPageChange.bind(this);
     this.handleSortChange = this.handleSortChange.bind(this);
+    this.handleSync = this.handleSync.bind(this);
   }
 
   fetchData(
@@ -188,6 +189,12 @@ class FirmwareUpgrades extends React.Component {
   }
   customFWType(column, attr, editorClass, ignoreEditable, defaultValue) {
     return <FirmwareType data={this.state.model} ref={attr.ref} />;
+  }
+
+  handleSync() {
+    if (window.confirm("Are you sure you want to sync to all the environments?")) {
+      //call to server
+    }
   }
 
   remote(remoteObj) {
@@ -377,7 +384,7 @@ class FirmwareUpgrades extends React.Component {
             Supported
           </TableHeaderColumn>
         </BootstrapTable>
-        <button type="button" className="btn btn-warning btn-lg">
+        <button type="button" className="btn btn-warning btn-lg" onClick={this.handleSync}>
           Sync To Environments
         </button>
       </div>
