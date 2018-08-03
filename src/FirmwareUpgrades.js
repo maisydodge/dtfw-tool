@@ -377,6 +377,9 @@ class FirmwareUpgrades extends React.Component {
             Supported
           </TableHeaderColumn>
         </BootstrapTable>
+        <button type="button" className="btn btn-warning btn-lg">
+          Sync To Environments
+        </button>
       </div>
     );
   }

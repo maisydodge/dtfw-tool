@@ -504,6 +504,9 @@ class DeviceTypes extends React.Component {
             Attributes
           </TableHeaderColumn>
         </BootstrapTable>
+        <button type="button" className="btn btn-warning btn-lg">
+          Sync To Environments
+        </button>
       </div>
     );
   }
